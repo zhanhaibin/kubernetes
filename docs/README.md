@@ -103,7 +103,7 @@ docker pull hub.c.163.com/library/mysql:latest
 启动MySQL服务
 
 首先为MySQL服务创建一个RC定义文件：mysql-rc.yaml，下面给出了该文件的完整内容
-
+```yaml
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -125,7 +125,7 @@ spec:
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "123456"
-
+```
 yaml定义文件说明：
 
 kind：表明此资源对象的类型，例如上面表示的是一个RC
@@ -162,6 +162,8 @@ kubectl describe pod mysql
 查看节点状态
 
 [root@Master mysql]# kubectl describe pod mysql
+
+```yaml
 Name:           mysql-4vsp1
 Namespace:      default
 Node:           127.0.0.1/127.0.0.1
@@ -196,6 +198,7 @@ Events:
   ---------     --------        -----   ----                    -------------   --------        ------          -------
   2s            2s              1       {default-scheduler }                    Normal          Scheduled       Successfully assigned mysql-4vsp1 to 127.0.0.1
   2s            2s              1       {kubelet 127.0.0.1}                     Warning         FailedSync      Error syncing pod, skipping: failed to "StartContainer" for "POD" with ErrImagePull: "image pull failed for registry.access.redhat.com/rhel7/pod-infrastructure:latest, this may be because there are no credentials on this request.  details: (open /etc/docker/certs.d/registry.access.redhat.com/redhat-ca.crt: no such file or directory)"
+```
 
 看到registry.access.redhat.com/rhel7/pod-infrastructure:latest感觉很奇怪，我设置的仓库是grc.io，为什么去拉取这个镜像，怀疑是不是什么没有安装好。
 尝试运行docker pull registry.access.redhat.com/rhel7/pod-infrastructure:latest，提示redhat-ca.crt: no such file or directory。
@@ -204,6 +207,7 @@ ls查看改文件是个软连接，链接目标是/etc/rhsm，查看没有rhsm�
 重新查看pod状态，发现已经成功Running
 
 [root@Master mysql]# kubectl get pods
+
 NAME          READY     STATUS    RESTARTS   AGE
 mysql-kqxcw   1/1       Running   0          35m
 
