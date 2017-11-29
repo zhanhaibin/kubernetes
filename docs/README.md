@@ -4,7 +4,7 @@ Kubernetes 是Google的一种基于容器的开源服务编排解决方案，在
 
 我们先看k8s的架构图，以便对它的部署有个直观的了解
 
-![image](https://github.com/zhanhaibin/kubernetes/docs/an-introduction-to-kubernetes-21-638.jpg)
+![image](https://github.com/zhanhaibin/kubernetes/docs/images/an-introduction-to-kubernetes-21-638.jpg)
 
 
 环境准备
