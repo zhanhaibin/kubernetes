@@ -4,7 +4,8 @@ Kubernetes 是Google的一种基于容器的开源服务编排解决方案，在
 
 我们先看k8s的架构图，以便对它的部署有个直观的了解
 
-http://og0usnhfv.bkt.clouddn.com/an-introduction-to-kubernetes-21-638.jpg
+![image](https://github.com/zhanhaibin/kubernetes/docs/an-introduction-to-kubernetes-21-638.jpg)
+
 
 环境准备
 本文的例子是基于Centos 7的Linux版本，大家也可以使用ubuntu或其他发行版，软件搭建的方式基本是差不多的，为了让例子更简单， 本文省去了网络Fannel的安装与配置，只做基本通用的开发环境搭建，希望对大家有帮助。
