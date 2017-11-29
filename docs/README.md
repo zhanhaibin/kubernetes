@@ -10,15 +10,15 @@ Kubernetes 是Google的一种基于容器的开源服务编排解决方案，在
 环境准备
 本文的例子是基于Centos 7的Linux版本，大家也可以使用ubuntu或其他发行版，软件搭建的方式基本是差不多的，为了让例子更简单， 本文省去了网络Fannel的安装与配置，只做基本通用的开发环境搭建，希望对大家有帮助。
 
-本例子用于测试的服务器ip为：192.168.139.149
+本例子用于测试的服务器，虚拟机安装centos  7 ,ip为：10.10.64.133
 
 yum源
 
 为了让国内下载etcd和kubernetes更流畅，我们先切换阿里云的yum源
 
-$ wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 
-$ yum makecache
+yum makecache
 
 关闭防火墙服务
 
@@ -26,21 +26,21 @@ centos7 默认使用firewall为防火墙，而Kubernetes的Master与工作Node�
 
 这里我们将其更改为iptables，具体步骤如下：
 
-$ systemctl disable firewalld.service
+systemctl disable firewalld.service
 
-$ systemctl stop firewalld.service
+systemctl stop firewalld.service
 
 安装iptables，其操作为：
 
-$ yum install -y iptables-services
+yum install -y iptables-services
 
-$ systemctl start iptables.service
+systemctl start iptables.service
 
-$ systemctl enable iptables.service
+systemctl enable iptables.service
 
 安装etcd和Kubernetes软件（docker会在安装kubernetes的过程中被安装）
 
-$ yum install -y etcd kubernetes
+yum install -y etcd kubernetes
 
 配置修改
 
@@ -48,13 +48,13 @@ $ yum install -y etcd kubernetes
 
 Docker配置文件 /etc/sysconfig/docker，其中的OPTIONS的内容设置为：
 
-$ vim /etc/sysconfig/docker
+vim /etc/sysconfig/docker
 
 OPTIONS='--selinux-enabled=false --insecure-registry gcr.io'
 
 Kubernetes修改apiserver的配置文件，在/etc/kubernetes/apiserver中
 
-$ vim /etc/kubernetes/apiserver
+vim /etc/kubernetes/apiserver
 
  KUBE_ADMISSION_CONTROL="--admission_control=NamespaceLifecycle,NamespaceExists,
  LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
@@ -133,19 +133,19 @@ spec: 对RC的相关属性定义，比如说spec.selector是RC的Pod标签（Lab
 spec.template定义pod的模板，这些模板会在当集群中的pod数量小于replicas时，被作为依据去创建新的Pod
 创建好 mysql-rc.yaml后， 为了将它发布到Kubernetes中，我们在Master节点执行命令
 
-$ kubectl create -f mysql-rc.yaml
+kubectl create -f mysql-rc.yaml
 
 replicationcontroller "mysql” created
 接下来，我们用kuberctl命令查看刚刚创建的RC:
 
-$ kubectl get rc
+kubectl get rc
 
 NAME      DESIRED   CURRENT   READY     AGE
 mysql     1         1         0         14s
 
 查看Pod的创建情况，可以运行下面的命令：
 
-$ kubectl get pods
+kubectl get pods
 
 NAME          READY     STATUS              RESTARTS   AGE
 mysql-b0gk0   0/1       ContainerCreating   0          3s
