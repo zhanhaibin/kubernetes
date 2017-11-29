@@ -16,49 +16,50 @@ yum源
 
 为了让国内下载etcd和kubernetes更流畅，我们先切换阿里云的yum源
 
+```yaml
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 
 yum makecache
-
+```
 关闭防火墙服务
 
 centos7 默认使用firewall为防火墙，而Kubernetes的Master与工作Node之间会有大量的网络通信，安全的做法是在防火墙上配置各种需要相互通讯的端口号，在一个安全的内部网络环境中可以关闭防火墙服务；
 
 这里我们将其更改为iptables，具体步骤如下：
-
+```yaml
 systemctl disable firewalld.service
 
 systemctl stop firewalld.service
-
+```
 安装iptables，其操作为：
-
+```yaml
 yum install -y iptables-services
 
 systemctl start iptables.service
 
 systemctl enable iptables.service
-
+```
 安装etcd和Kubernetes软件（docker会在安装kubernetes的过程中被安装）
-
+```yaml
 yum install -y etcd kubernetes
-
+```
 配置修改
 
 安装完服务组件后，我们需要修改相关的配置
 
 Docker配置文件 /etc/sysconfig/docker，其中的OPTIONS的内容设置为：
-
+```yaml
 vim /etc/sysconfig/docker
 
 OPTIONS='--selinux-enabled=false --insecure-registry gcr.io'
-
+```
 Kubernetes修改apiserver的配置文件，在/etc/kubernetes/apiserver中
-
+```yaml
 vim /etc/kubernetes/apiserver
 
  KUBE_ADMISSION_CONTROL="--admission_control=NamespaceLifecycle,NamespaceExists,
  LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
-
+```
 去掉 ServiceAccount 选项。否则会在往后的pod创建中，会出现类似以下的错误：
 
  Error from server: error when creating "mysql-rc.yaml": Pod "mysql" is forbidden:
@@ -68,11 +69,11 @@ vim /etc/kubernetes/apiserver
 切换docker hub 镜像源
 
 在国内为了稳定pull镜像，我们最好使用Daocloud的镜像服务 :)
-
+```yaml
 curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://dbe35452.m.daocloud.io
-
+```
 按顺序启动所有服务
-
+```yaml
 systemctl start etcd
 
 systemctl start docker
@@ -86,11 +87,11 @@ systemctl start kube-scheduler.service
 systemctl start kubelet.service
 
 systemctl start kube-proxy.service
-
+```
 然后，我们检验下kubernetes的服务是否跑起来
-
+```yaml
 ps -ef | grep kube
-
+```
 到目前为止，一个单机版的Kubernetes的环境就安装启动完成了。接下来，我就基于这个单机版，撸起袖子，认真干！！！
 
 启动MySQL容器服务
@@ -132,38 +133,39 @@ kind：表明此资源对象的类型，例如上面表示的是一个RC
 spec: 对RC的相关属性定义，比如说spec.selector是RC的Pod标签（Label）选择器，既监控和管理拥有这些表情的Pod实例，确保当前集群上始终有且 仅有replicas个Pod实例在运行。
 spec.template定义pod的模板，这些模板会在当集群中的pod数量小于replicas时，被作为依据去创建新的Pod
 创建好 mysql-rc.yaml后， 为了将它发布到Kubernetes中，我们在Master节点执行命令
-
+```yaml
 kubectl create -f mysql-rc.yaml
 
 replicationcontroller "mysql” created
+```
 接下来，我们用kuberctl命令查看刚刚创建的RC:
-
+```yaml
 kubectl get rc
 
 NAME      DESIRED   CURRENT   READY     AGE
 mysql     1         1         0         14s
+```
 
 查看Pod的创建情况，可以运行下面的命令：
-
+```yaml
 kubectl get pods
 
 NAME          READY     STATUS              RESTARTS   AGE
 mysql-b0gk0   0/1       ContainerCreating   0          3s
-
+```
 可见pod的状态处于ContainerCreating，我们需要耐心等待一下，直到状态为Running
-
+```yaml
 NAME          READY     STATUS    RESTARTS   AGE
 mysql-b0gk0   1/1       Running   0          6m
-
+```
 如果状态一直是ContainerCreating状态，可以使用
-
+```yaml
 kubectl describe pod mysql 
 
 查看节点状态
 
 [root@Master mysql]# kubectl describe pod mysql
-
-```yaml
+ 
 Name:           mysql-4vsp1
 Namespace:      default
 Node:           127.0.0.1/127.0.0.1
@@ -205,16 +207,16 @@ Events:
 ls查看改文件是个软连接，链接目标是/etc/rhsm，查看没有rhsm，尝试安装yum install *rhsm*，出现相关软件，感觉比较符合，所以安装查看产生了/etc/rhsm文件夹。
 
 重新查看pod状态，发现已经成功Running
-
+```yaml
 [root@Master mysql]# kubectl get pods
 
 NAME          READY     STATUS    RESTARTS   AGE
 mysql-kqxcw   1/1       Running   0          35m
-
+```
 
 
 最后，我们创建一个与之关联的Kubernetes Service - MySQL的定义文件：mysql-svc.yaml
-
+```yaml
 apiVersion: v1
 kind: Service
 metadata: 
@@ -224,28 +226,34 @@ spec:
     - port: 3306
   selector:
     app: mysql
+
+```
 其中 metadata.name是Service的服务名，port定义服务的端口，spec.selector确定了哪些Pod的副本对应本地的服务。
 
 运行kuberctl命令，创建service：
-
-$ kubectl create -f mysql-svc.yaml
+```yaml
+kubectl create -f mysql-svc.yaml
 
 service "mysql" created
+```
 然后我们查看service的状态
-
-$ kubectl get svc
+```yaml
+kubectl get svc
 
 NAME         CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 kubernetes   10.254.0.1      <none>        443/TCP    18m
 mysql        10.254.185.20   <none>        3306/TCP   14s
+```
 注意到MySQL服务被分配了一个值为 10.254.185.20的CLUSTER-IP，这是一个虚地址，随后，Kubernetes集群中的其他新创建的Pod就可以通过Service 的CLUSTER-IP+端口6379来连接和访问它了。
 
 启动Web容器服务
 先拉取一个测试镜像到本地
-
+```yaml
 docker pull kubeguide/tomcat-app:v1
+```
 上面我们定义和启动了MySQL的服务，接下来我们用同样的步骤，完成Tomcat应用的服务启动过程，首先我们创建对应的RC文件 myweb-rc.yaml，具体内容如下：
 
+```yaml
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -269,17 +277,22 @@ spec:
           value: "mysql"
         - name: MYSQL_SERVICE_PORT
           value: "3306"
+```       
+
 与mysql一样，我们创建rc服务：
 
-$ kubectl create -f myweb-rc.yaml
+```yaml
+kubectl create -f myweb-rc.yaml
 replicationcontroller "myweb" created
 
-$ kubectl get rc
+kubectl get rc
 NAME      DESIRED   CURRENT   READY     AGE
 mysql     1         1         0         14m
 myweb     5         5         0         10s
-接着，我们看下pods的状态：
 
+```
+接着，我们看下pods的状态：
+```yaml
 $ kubectl get pods
 NAME          READY     STATUS    RESTARTS   AGE
 mysql-b0gk0   1/1       Running   0          15m
@@ -288,10 +301,11 @@ myweb-8ffs6   1/1       Running   0          43s
 myweb-xge1t   1/1       Running   0          43s
 myweb-xr214   1/1       Running   0          43s
 myweb-zia37   1/1       Running   0          43s
+```
 wow..从命理结果我们发现，我们yaml中声明的5个副本都被创建并运行起来了，我们隐约感受到k8s的威力咯
 
 我们创建对应的Service, 相关的myweb-svc文件如下：
-
+```yaml
 apiVersion: v1
 kind: Service
 metadata: 
@@ -303,21 +317,25 @@ spec:
       nodePort: 30001
   selector:
     app: myweb
+```    
 运行kubectl create 命令进行创建
-
-$ kubectl create  -f myweb-svc.yaml
+```yaml
+kubectl create  -f myweb-svc.yaml
 service "myweb" created
-最后，我们使用kubectl查看前面创建的Service
+```
 
+最后，我们使用kubectl查看前面创建的Service
+```yaml
 [root@kdev tmp]# kubectl get services
 NAME         CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 kubernetes   10.254.0.1      <none>        443/TCP    4h
 mysql        10.254.185.20   <none>        3306/TCP   4m
 myweb        10.254.18.53    <nodes>       8080/TCP   57s
+```
 验证与总结
 通过上面的几个步骤，我们可以成功实现了一个简单的K8s单机版例子，我们可以在浏览器输入 http://192.168.139.149:30001/demo/ 来测试我们发布的web应用。
-
-$ curl http://192.168.139.149:30001
+```yaml
+curl http://192.168.139.149:30001
 
 
 <!DOCTYPE html>
@@ -345,6 +363,7 @@ $ curl http://192.168.139.149:30001
             <div id="asf-box">
                 <h1>Apache Tomcat/8.0.35</h1>
             </div>
+```        
 ...
 ...
 ...
