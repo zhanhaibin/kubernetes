@@ -204,7 +204,12 @@ Events:
 
 看到registry.access.redhat.com/rhel7/pod-infrastructure:latest感觉很奇怪，我设置的仓库是grc.io，为什么去拉取这个镜像，怀疑是不是什么没有安装好。
 尝试运行docker pull registry.access.redhat.com/rhel7/pod-infrastructure:latest，提示redhat-ca.crt: no such file or directory。
-ls查看改文件是个软连接，链接目标是/etc/rhsm，查看没有rhsm，尝试安装yum install *rhsm*，出现相关软件，感觉比较符合，所以安装查看产生了/etc/rhsm文件夹。
+ls查看改文件是个软连接，链接目标是/etc/rhsm，查看没有rhsm，
+
+尝试安装 
+
+```yum install *rhsm* ```
+， 出现相关软件，感觉比较符合，所以安装查看产生了/etc/rhsm文件夹。
 
 重新查看pod状态，发现已经成功Running
 ```yaml
