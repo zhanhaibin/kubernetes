@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: nginx-proxy-pod
+ labels:
+  name: nginx-proxy
+spec:
+ containers:
+ - name: nginx-proxy
+   image: nginx:alpine
+   ports:
+   - containerPort: 80
