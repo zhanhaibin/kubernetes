@@ -11,8 +11,8 @@ apiVersion: extensions/v1beta1
 metadata:
   labels:
     app: nexus3
-  name: nexus3
-  namespace: nexus
+    name: nexus3
+    namespace: nexus
 spec:
   replicas: 1
   selector:
