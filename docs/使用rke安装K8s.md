@@ -208,7 +208,7 @@ network:
     flannel_image: quay.io/coreos/flannel:v0.9.1
     flannel_cni_image: quay.io/coreos/flannel-cni:v0.2.0
 
-ssh_key_path: ~/.ssh/rsa
+ssh_key_path: ~/.ssh/rsa   #路径改为自己的证书路径
 enforce_docker_version: false
 # Kubernetes authorization mode; currently only `rbac` is supported and enabled by default.
 # Use `mode: none` to disable authorization
@@ -220,7 +220,7 @@ nodes:
   - address: 1.1.1.1   #改成自己的IP
     user: root
     role: [controlplane, etcd,worker]
-    ssh_key_path: ~/.ssh/id_rsa
+    ssh_key_path: ~/.ssh/id_rsa     #路径改为自己的证书路径
 services:
   etcd:
     image: quay.io/coreos/etcd:latest
@@ -269,6 +269,8 @@ RKE会在配置文件所在的目录下部署一个本地文件，该文件中�
 需要注意的是，部署的本地kube配置名称是和集群配置文件相关的。例如，如果您使用名为mycluster.yml的配置文件，则本地kube配置将被命名为.kube_config_mycluster.yml。
 
 cp ./kube_config_cluster.yml   ~/.kube/config
+
+参考https://kubernetes.io/docs/tasks/tools/install-kubectl/ 安装kubtctl
 
 kubectl v1.8 下载地址
 
