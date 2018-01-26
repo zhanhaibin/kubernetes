@@ -268,7 +268,7 @@ RKE会在配置文件所在的目录下部署一个本地文件，该文件中�
 
 需要注意的是，部署的本地kube配置名称是和集群配置文件相关的。例如，如果您使用名为mycluster.yml的配置文件，则本地kube配置将被命名为.kube_config_mycluster.yml。
 
-cp ./kube_config_cluster.yml   ~/.kube/config
+cp .kube_config_cluster.yml   ~/.kube/config
 
 参考https://kubernetes.io/docs/tasks/tools/install-kubectl/ 安装kubtctl
 
@@ -278,6 +278,10 @@ https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.8.md#client-bin
 ```
 wget https://dl.k8s.io/v1.8.7/kubernetes-client-linux-amd64.tar.gz
 ```
+
+如果下载不下来，被墙了。个人kubectlv1.8.7墙内下载
+
+https://pan.baidu.com/s/1mjBHcuc
 
 下载后解压
 ```
