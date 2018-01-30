@@ -29,3 +29,18 @@ spec:
        - name: nginx
          hostPath:
           path: /srv/ibas/nginx/c02-01/nginx.conf
+---
+#------------------------------------------------#
+apiVersion: v1
+kind: Service
+metadata:
+ name: c02-01-web
+ labels:
+   name: c02-01-web
+spec:
+ type: NodePort
+ ports:
+ - port: 80
+   nodePort: 30003
+ selector:
+  app: c02-01-web-deploy
