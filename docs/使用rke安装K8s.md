@@ -238,6 +238,7 @@ services:
     image: rancher/k8s:v1.8.3-rancher2
   kubelet:
     image: rancher/k8s:v1.8.3-rancher2
+    extra_args: {"fail-swap-on":"false"}
     cluster_domain: cluster.local
     cluster_dns_server: 10.233.0.3
     infra_container_image: registry.cn-qingdao.aliyuncs.com/zhanhaibin/pause-amd64:3.0

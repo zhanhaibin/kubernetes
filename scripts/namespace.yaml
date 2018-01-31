@@ -1,0 +1,13 @@
+apiVersion: v1  
+kind: Namespace  
+metadata:  
+   name: customer-web  
+   labels:  
+     name: customer-web
+---
+apiVersion: v1  
+kind: Namespace  
+metadata:  
+   name: customer-tomcat  
+   labels:  
+     name: customer-tomcat
