@@ -2,7 +2,6 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: c02-01-tomcat-deploy
-  namespace: customer-tomcat
 spec:
   replicas: 1
   template:
@@ -43,7 +42,6 @@ metadata:
  name: c02-01-service
  labels:
    name: c02-01-service
-   namespace: customer-tomcat
 spec:
  ports:
  - port: 8080

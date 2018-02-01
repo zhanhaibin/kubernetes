@@ -2,7 +2,6 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: c02-01-web-deploy
-  namespace: customer-web
 spec:
   replicas: 1
   template:
@@ -38,7 +37,6 @@ metadata:
  name: c02-01-web
  labels:
    name: c02-01-web
- namespace: customer-web
 spec:
  type: NodePort
  ports:
