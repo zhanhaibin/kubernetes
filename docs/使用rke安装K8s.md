@@ -241,7 +241,7 @@ services:
     extra_args: {"fail-swap-on":"false"}
     cluster_domain: cluster.local
     cluster_dns_server: 10.233.0.3
-    infra_container_image: registry.cn-qingdao.aliyuncs.com/zhanhaibin/pause-amd64:3.0
+    infra_container_image: gcr.io/google_containers/pause-amd64:3.0
   kubeproxy:
     image: rancher/k8s:v1.8.3-rancher2
 
@@ -251,10 +251,10 @@ system_images:
   nginx_proxy: rancher/rke-nginx-proxy:v0.1.1
   cert_downloader: rancher/rke-cert-deployer:v0.1.1
   service_sidekick_image: rancher/rke-service-sidekick:v0.1.0
-  kubedns_image: registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-kube-dns-amd64:1.14.5
-  dnsmasq_image: registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-dnsmasq-nanny-amd64:1.14.5
-  kubedns_sidecar_image: registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-sidecar-amd64:1.14.5
-  kubedns_autoscaler_image: registry.cn-qingdao.aliyuncs.com/zhanhaibin/cluster-proportional-autoscaler-amd64:1.0.0
+  kubedns_image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.5
+  dnsmasq_image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.5
+  kubedns_sidecar_image: gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.5
+  kubedns_autoscaler_image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64:1.0.0
 ```
 
 4、开始安装
