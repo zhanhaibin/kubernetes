@@ -25,6 +25,7 @@ RUN mkdir -p ${IBAS_PACKAGE};
 COPY ./ibas_packages/ ${IBAS_PACKAGE}/
 COPY compile_order.txt ${CATALINA_HOME}
 COPY download_wars.sh ${CATALINA_HOME}
+COPY deploy_documents.sh ${CATALINA_HOME}
 
 # 清理TOMCAT自带网站
 RUN rm -rf ${IBAS_DEPLOY} && mkdir -p ${IBAS_DEPLOY}
@@ -34,6 +35,8 @@ RUN set -x \
 # 下载最新的程序war包
 # 释放war包
     && ${CATALINA_HOME}/deploy_apps.sh \
+# 文件共享目录
+    &&  ${CATALINA_HOME}/deploy_documents.sh \
 # 删除下载的包
     && rm -rf ${IBAS_PACKAGE} \
 # 调整权限

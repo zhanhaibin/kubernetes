@@ -55,7 +55,7 @@ do
  
 	# Download
 	echo 'SURL:' $url
-	wget -q -N -P ${IBAS_PACKAGE} $url
+	wget -q -P ${IBAS_PACKAGE} $url
  
 	#echo Done
 done < ${WORK_FOLDER}/compile_order.txt
