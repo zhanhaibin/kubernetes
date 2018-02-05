@@ -22,6 +22,8 @@ spec:
               name: time
             - mountPath: /etc/nginx/nginx.conf
               name: nginx
+            - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
+              name: loader
       volumes:
        - name: time
          hostPath:
@@ -29,6 +31,9 @@ spec:
        - name: nginx
          hostPath:
           path: /srv/ibas/nginx/c01-01/nginx.conf
+       - name: loader
+         hostPath:
+          path: /srv/ibas/nginx/loader.js
 ---
 #------------------------------------------------#
 apiVersion: v1
