@@ -1,0 +1,51 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: c01-01-tomcat-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: c01-01-tomcat-deploy
+    spec:
+      containers:
+      - name: c01-01-tomcat
+        image: docker.avacloud.com.cn/colorcoding/tomcat:C01-01
+        ports:
+        - containerPort: 8080
+        resources:
+         limits:
+          memory: 512Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+        - mountPath: /usr/local/tomcat/ibas/conf/
+          name: ibasconf
+        - mountPath: /usr/local/tomcat/ibas/data/
+          name: ibasdata
+      volumes:
+       - name: time
+         hostPath:
+          path: /etc/localtime
+       - name: ibasconf
+         hostPath:
+          path: /srv/ibas/tomcat/c01-01/conf/
+       - name: ibasdata
+         hostPath:
+          path: /srv/ibas/tomcat/c01-01/data/
+---
+#----------------------------------------------#
+apiVersion: v1
+kind: Service
+metadata:
+ name: c01-01-service
+ labels:
+   name: c01-01-service
+spec:
+ ports:
+ - port: 8080
+   targetPort: 8080
+ selector:
+  app: c01-01-tomcat-deploy
+          
