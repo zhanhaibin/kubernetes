@@ -72,7 +72,6 @@ RUN set -x \
 	mkdir -p "${IBAS_DEPLOY}/${folder}/openui5/typings/";  \
 	cp -rp "${IBAS_DEPLOY}/root/openui5/typings/" "${IBAS_DEPLOY}/${folder}/openui5/"; \
        done < "${IBAS_PACKAGE}/ibas.deploy.order.txt" | sed 's/\r//g';) \
-
 	# 删除下载的包
     && rm -rf "${IBAS_PACKAGE}" 
 
