@@ -1,17 +1,17 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: c01-01-web-deploy
+  name: t01-01-web-deploy
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: c01-01-web-deploy
+        app: t01-01-web-deploy
     spec:
       containers:
-       - name: c01-01-web
-         image: docker.avacloud.com.cn/colorcoding/nginx:C01-01
+       - name: t01-01-web
+         image: docker.avacloud.com.cn/colorcoding/nginx:t01-01
          ports:
           - containerPort: 80
          resources:
@@ -30,7 +30,7 @@ spec:
           path: /etc/localtime
        - name: nginx
          hostPath:
-          path: /srv/ibas/nginx/c01-01/nginx.conf
+          path: /srv/ibas/nginx/t01-01/nginx.conf
        - name: loader
          hostPath:
           path: /srv/ibas/nginx/loader.js
@@ -39,13 +39,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
- name: c01-01-web
+ name: t01-01-web
  labels:
-   name: c01-01-web
+   name: t01-01-web
 spec:
  type: NodePort
  ports:
  - port: 80
    nodePort: 30003
  selector:
-  app: c01-01-web-deploy
+  app: t01-01-web-deploy
