@@ -12,44 +12,45 @@ ENV \
 # ibas下载目录
     IBAS_PACKAGE=${CATALINA_HOME}/ibas_packages \
 # ibas部署目录
-    IBAS_DEPLOY=${CATALINA_HOME}/webapps 
+    IBAS_DEPLOY=${CATALINA_HOME}/webapps
 
-# jvisualvm 监控端口设置 
+# jvisualvm 监控端口设置
 ENV CATALINA_OPTS="-Djava.rmi.server.hostname=10.0.8.50  -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8971 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.rmi.port=8971"
 EXPOSE 8080 8971
 
 # 创建数据文件夹
-RUN mkdir -p ${IBAS_PACKAGE}; 
+#RUN mkdir -p ${IBAS_PACKAGE};
 
 # 拷贝应用包文件
-COPY ./ibas_packages/ ${IBAS_PACKAGE}/
+#COPY ./ibas_packages/ ${IBAS_PACKAGE}/
 COPY compile_order.txt ${CATALINA_HOME}
 COPY download_wars.sh ${CATALINA_HOME}
 COPY deploy_documents.sh ${CATALINA_HOME}
 
 # 清理TOMCAT自带网站
-RUN rm -rf ${IBAS_DEPLOY} && mkdir -p ${IBAS_DEPLOY}
-
-# 部署ibas程序
-RUN set -x \
-# 下载最新的程序war包
-# 释放war包
-    && ${CATALINA_HOME}/deploy_apps.sh \
-# 文件共享目录
-    &&  ${CATALINA_HOME}/deploy_documents.sh \
-# 删除下载的包
-    && rm -rf ${IBAS_PACKAGE} \
-# 调整权限
-    && chmod -R 777 ${IBAS_DEPLOY}
-
+#RUN rm -rf ${IBAS_DEPLOY} && mkdir -p ${IBAS_DEPLOY}
 
 # 定义时区
 
-#RUN  apk add --no-cache tzdat   apline环境移到基础镜像中安装，ubuntu不需要安装
-#定义环境变量  
+#定义环境变量
 ENV  TIME_ZONE Asia/Shanghai
+
+# 部署ibas程序
+RUN set -x \
+# 清理TOMCAT自带网站
+    && rm -rf ${IBAS_DEPLOY} && mkdir -p ${IBAS_DEPLOY} \
+# 下载最新的程序war包
+    && ${CATALINA_HOME}/download_wars.sh \
+# 释放war包
+    && ${CATALINA_HOME}/deploy_apps.sh \
+# 共享目录
+    && ${CATALINA_HOME}/deploy_documents.sh \
+# 删除下载的包
+    && rm -rf ${IBAS_PACKAGE} \
+# 调整权限
+    && chmod -R 777 ${IBAS_DEPLOY} \
 #dockerfile增加命令
-RUN echo "${TIME_ZONE}" > /etc/timezone && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
+    && echo "${TIME_ZONE}" > /etc/timezone && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
 
 # 设置工作目录
 WORKDIR ${CATALINA_HOME}

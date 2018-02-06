@@ -20,11 +20,13 @@ ENV \
 RUN mkdir -p "${IBAS_DEPLOY}";
 
 # 拷贝配置文件
-#COPY "ibas.nginx.conf" "/etc/nginx/nginx.conf"
+COPY "ibas.nginx.conf" "/etc/nginx/nginx.conf"
 COPY "ibas.index.html" "${IBAS_DEPLOY}/index.html"
-COPY "ibas_packages/" "${IBAS_PACKAGE}/"
+COPY "download_wars.sh/" "${NGINX_HOME}/"
 # 部署ibas程序
 RUN set -x \
+# 下载最新的程序war包
+    && ${CATALINA_HOME}/download_wars.sh \
 # 排序ibas.deploy.order.txt，此文件为部署顺序说明。
     && if [ ! -e "${IBAS_PACKAGE}/ibas.deploy.order.txt" ]; then \
           ls -l "${IBAS_PACKAGE}/*.war" | awk '//{print $NF}' >>"${IBAS_PACKAGE}/ibas.deploy.order.txt"; \
@@ -50,11 +52,13 @@ RUN set -x \
            rm -rf "${IBAS_DEPLOY}/${folder}/META-INF"; \
          fi; \
        done < "${IBAS_PACKAGE}/ibas.deploy.order.txt" | sed 's/\r//g';) \
+	   
        # 调整权限
        && chmod -R 777 "${IBAS_DEPLOY}"
 
 #复制root下openui5，到各个模块下
 RUN set -x \ 
+	
     && if [ ! -e "${IBAS_PACKAGE}/ibas.deploy.order.txt" ]; then \
           ls -l "${IBAS_PACKAGE}/*.war" | awk '//{print $NF}' >>"${IBAS_PACKAGE}/ibas.deploy.order.txt"; \
        fi \
@@ -66,6 +70,7 @@ RUN set -x \
 	mkdir -p "${IBAS_DEPLOY}/${folder}/openui5/typings/";  \
 	cp -rp "${IBAS_DEPLOY}/root/openui5/typings/" "${IBAS_DEPLOY}/${folder}/openui5/"; \
        done < "${IBAS_PACKAGE}/ibas.deploy.order.txt" | sed 's/\r//g';) \
+
 	# 删除下载的包
     && rm -rf "${IBAS_PACKAGE}" 
 

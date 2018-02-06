@@ -14,10 +14,6 @@ TAG=$1
 if [ "${TAG}" == "" ]; then TAG=$(date +%s); fi;
 NAME_TAG=${NAME}:${TAG}
 
-echo 开始下载war包
-
-./download_wars.sh
-
 echo 开始构建镜像${NAME_TAG}
 # 调用docker build
 docker build --force-rm --no-cache -f ./dockerfile -t ${RegistoryUrl}/${NAME_TAG} ./
