@@ -1,12 +1,12 @@
 # 基于nginx镜像的ibas镜像
 # OS：debian:jessie
-FROM colorcoding/nginx
+FROM colorcoding/nginx：ibas-apline
 
 # 作者
 MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
 
-RUN apt-get update
-RUN apt-get install curl -y
+#RUN apt-get update
+#RUN apt-get install curl -y
 
 # 定义环境变量
 ENV \
