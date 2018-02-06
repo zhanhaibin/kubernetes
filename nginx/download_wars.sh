@@ -41,7 +41,7 @@ do
 
         #echo Done
 done < ${WORK_FOLDER}/compile_order.txt
-#chmod -R 777 ${IBAS_PACKAGE}
+chmod -R 777 ${IBAS_PACKAGE}
 
 echo --下载war包完成
 
