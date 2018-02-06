@@ -51,7 +51,7 @@ do
         version=`curl -s "$path/maven-metadata.xml" | grep release | sed "s/.*<release>\([^<]*\)<\/release>.*/\1/"`
         
         war=$name-$version.war 
-	echo $war >> "${IBAS_PACKAGE}/ibas.deploy.order.txt"
+	      echo $war >> "${IBAS_PACKAGE}/ibas.deploy.order.txt"
         url=$path/$version/$war
  
 	# Download

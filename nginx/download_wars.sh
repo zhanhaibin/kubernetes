@@ -19,6 +19,8 @@ server=http://192.168.2.10:8081/repository
 repo=maven-releases
 
 echo --工作的目录：${WORK_FOLDER}
+
+chmod -R 777 ${IBAS_PACKAGE}
 # 下载war包
 # 遍历complie_order.txt
 while read file
@@ -40,8 +42,7 @@ do
         wget -q -N -P ${IBAS_PACKAGE} $url
 
         #echo Done
-done < ${WORK_FOLDER}/compile_order.txt
-chmod -R 777 ${IBAS_PACKAGE}
+done < ${WORK_FOLDER}/compile_order.txt 
 
 echo --下载war包完成
 

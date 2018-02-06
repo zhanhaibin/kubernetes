@@ -27,9 +27,6 @@ COPY compile_order.txt ${CATALINA_HOME}
 COPY download_wars.sh ${CATALINA_HOME}
 COPY deploy_documents.sh ${CATALINA_HOME}
 
-# 清理TOMCAT自带网站
-#RUN rm -rf ${IBAS_DEPLOY} && mkdir -p ${IBAS_DEPLOY}
-
 # 定义时区
 
 #定义环境变量
