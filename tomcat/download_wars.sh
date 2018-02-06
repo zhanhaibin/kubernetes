@@ -31,7 +31,8 @@ if [ ! -e "${IBAS_PACKAGE}" ];then mkdir -p "${IBAS_PACKAGE}"; fi;
 
 cd ${WORK_FOLDER}
 #nexus3 地址
-server=http://maven.avacloud.com.cn/repository
+#server=http://maven.avacloud.com.cn/repository
+server=http://192.168.2.10:8081/repository
 repo=maven-releases
 
 

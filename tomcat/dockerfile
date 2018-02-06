@@ -49,7 +49,7 @@ RUN set -x \
     && rm -rf ${IBAS_PACKAGE} \
 # 调整权限
     && chmod -R 777 ${IBAS_DEPLOY} \
-#dockerfile增加命令
+# 设置容器时区
     && echo "${TIME_ZONE}" > /etc/timezone && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
 
 # 设置工作目录
