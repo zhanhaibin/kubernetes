@@ -2,6 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: c02-02-web-deploy
+  namespace: deploy
 spec:
   replicas: 1
   template:
@@ -11,7 +12,7 @@ spec:
     spec:
       containers:
        - name: c02-02-web
-         image: docker.avacloud.com.cn/colorcoding/nginx:C01-01
+         image: docker.avacloud.com.cn/colorcoding/nginx:t01-01
          ports:
           - containerPort: 80
          resources:
@@ -40,6 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
  name: c02-02-web
+ namespace: deploy
  labels:
    name: c02-02-web
 spec:

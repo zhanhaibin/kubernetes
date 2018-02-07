@@ -2,6 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: c02-01-tomcat-deploy
+  namespace: deploy
 spec:
   replicas: 1
   template:
@@ -11,7 +12,7 @@ spec:
     spec:
       containers:
       - name: c02-01-tomcat
-        image: docker.avacloud.com.cn/colorcoding/tomcat:C01-01
+        image: docker.avacloud.com.cn/colorcoding/tomcat:t01-01
         ports:
         - containerPort: 8080
         resources:
@@ -38,6 +39,7 @@ spec:
 #----------------------------------------------#
 apiVersion: v1
 kind: Service
+namespace: deploy
 metadata:
  name: c02-01-service
  labels:
