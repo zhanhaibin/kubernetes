@@ -25,6 +25,15 @@ else
   echo 镜像构建失败
 fi;
 
+echo 登录私有镜像仓库
+docker login -u admin -p AVAtech2018 ${RegistoryUrl}
+echo 上传镜像至私有仓库
+docker push ${RegistoryUrl}/${NAME_TAG}
+echo 删除本地镜像
+#docker rmi ${RegistoryUrl}/${NAME_TAG}
+echo 容器镜像上传完成
+docker logout ${RegistoryUrl}
+
 
 
 
