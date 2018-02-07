@@ -39,9 +39,9 @@ spec:
 #----------------------------------------------#
 apiVersion: v1
 kind: Service
-namespace: deploy
 metadata:
  name: c02-01-service
+ namespace: deploy
  labels:
    name: c02-01-service
 spec:
