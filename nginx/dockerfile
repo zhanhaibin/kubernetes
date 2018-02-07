@@ -1,6 +1,6 @@
 # 基于nginx镜像的ibas镜像
 # OS：alpine
-FROM colorcoding/nginx:ibas
+FROM colorcoding/nginx:ibas-alpine
 
 # 作者
 MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
