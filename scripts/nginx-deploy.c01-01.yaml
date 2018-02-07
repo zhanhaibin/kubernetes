@@ -2,7 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: c01-01-web-deploy
-  namespace: deploy
+  namespace: deploy-web
 spec:
   replicas: 1
   template:

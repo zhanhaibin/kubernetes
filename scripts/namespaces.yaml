@@ -4,3 +4,10 @@ metadata:
    name: deploy
    labels:
      name: deploy
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: deploy-web
+   labels:
+     name: deploy-web
