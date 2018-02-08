@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
  name: c02-02-web
- namespace: deploy
+ namespace: deploy-web
  labels:
    name: c02-02-web
 spec:
