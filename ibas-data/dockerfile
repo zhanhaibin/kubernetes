@@ -1,6 +1,6 @@
 # 基于nginx镜像的ibas镜像
 # OS：alpine
-FROM alpine:Latest
+FROM alpine:latest
 
 # 作者
 MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
@@ -26,4 +26,4 @@ RUN set -x \
     && rm -rf /var/cache/apk/*
 
 # 设置工作目录
-WORKDIR "${NGINX_HOME}"
+WORKDIR "${IBAS_HOME}"

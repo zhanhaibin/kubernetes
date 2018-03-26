@@ -21,9 +21,7 @@ spec:
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
-        - mountPath: /usr/local/tomcat/ibas/conf/
-          name: ibasconf
-        - mountPath: /usr/local/tomcat/ibas/data/
+        - mountPath: /usr/local/tomcat/ibas/
           name: ibasdata
      - name: c01-01-web
        image: docker.avacloud.com.cn/colorcoding/nginx:t01-01
@@ -36,25 +34,27 @@ spec:
        - mountPath: /etc/localtime
          name: time
        - mountPath: /etc/nginx/nginx.conf
-         name: nginx
-       - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
-         name: loader  
+         name: nginx-conf  
+     - name: c01-01-web
+       image: docker.avacloud.com.cn/colorcoding/ibas-data:ibas-data
+       resources:
+        limits:
+         memory: 64Mi
+       volumeMounts:
+       - mountPath: /etc/localtime
+         name: time
+       - mountPath: /etc/nginx/nginx.conf
+         name: nginx-conf  
       volumes:
        - name: time
          hostPath:
           path: /etc/localtime
-       - name: ibasconf
+       - name: nginx-conf
          hostPath:
-          path: /srv/ibas/tomcat/c01-01/conf/
+          path: /srv/ibas/customers/c01-01/nginx/
        - name: ibasdata
          hostPath:
-          path: /srv/ibas/tomcat/c01-01/data/
-       - name: nginx
-         hostPath:
-          path: /srv/ibas/nginx/c01-01/nginx.conf
-       - name: loader
-         hostPath:
-          path: /srv/ibas/nginx/loader.js
+          path: /srv/ibas/customers/c01-01/tomcat/
 ---
 #----------------------------------------------#
 apiVersion: v1
