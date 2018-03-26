@@ -1,14 +1,14 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: c01-01-tomcat-deploy
+  name: c01-01-deploy
   namespace: deploy
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: c01-01-tomcat-deploy
+        app: c01-01-deploy
     spec:
       containers:
       - name: c01-01-tomcat
@@ -25,6 +25,20 @@ spec:
           name: ibasconf
         - mountPath: /usr/local/tomcat/ibas/data/
           name: ibasdata
+     - name: c01-01-web
+       image: docker.avacloud.com.cn/colorcoding/nginx:t01-01
+       ports:
+       - containerPort: 80
+       resources:
+        limits:
+         memory: 64Mi
+       volumeMounts:
+       - mountPath: /etc/localtime
+         name: time
+       - mountPath: /etc/nginx/nginx.conf
+         name: nginx
+       - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
+         name: loader  
       volumes:
        - name: time
          hostPath:
@@ -35,6 +49,12 @@ spec:
        - name: ibasdata
          hostPath:
           path: /srv/ibas/tomcat/c01-01/data/
+       - name: nginx
+         hostPath:
+          path: /srv/ibas/nginx/c01-01/nginx.conf
+       - name: loader
+         hostPath:
+          path: /srv/ibas/nginx/loader.js
 ---
 #----------------------------------------------#
 apiVersion: v1
@@ -49,5 +69,5 @@ spec:
  - port: 8080
    targetPort: 8080
  selector:
-  app: c01-01-tomcat-deploy
+  app: c01-01-deploy
           
