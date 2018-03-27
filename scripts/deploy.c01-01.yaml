@@ -1,0 +1,105 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: c01-01-deploy
+  namespace: deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: c01-01-deploy
+    spec:
+      containers:
+      - name: c01-01-tomcat
+        image: docker.avacloud.com.cn/colorcoding/tomcat:t01-01
+        ports:
+        - containerPort: 8080
+        resources:
+         limits:
+          memory: 512Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+        - mountPath: /usr/local/tomcat/ibas/
+          name: app-logs
+      - name: c01-01-web
+        image: docker.avacloud.com.cn/colorcoding/nginx:t01-01
+        ports:
+        - containerPort: 80
+        resources:
+         limits:
+          memory: 64Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-conf  
+      - name: filebeat
+        image: dfilebeat-alpine:latest
+        volumeMounts:
+        - name: app-logs
+          mountPath: /log
+        - name: filebeat-config
+          mountPath: /etc/filebeat/
+      volumes:
+       - name: filebeat-config
+          configMap:
+           name: filebeat-config
+       - name: time
+         hostPath:
+          path: /etc/localtime
+       - name: nginx-conf
+         hostPath:
+          path: /srv/ibas/customers/c01-01/nginx/nginx.conf
+       - name: app-logs
+         hostPath:
+          path: /srv/ibas/customers/c01-01/tomcat/
+---
+#----------------------------------------------#
+apiVersion: v1
+kind: Service
+metadata:
+ name: c01-01-service
+ namespace: deploy
+ labels:
+   name: c01-01-service
+spec:
+ ports:
+ - port: 8080
+   targetPort: 8080
+ selector:
+  app: c01-01-deploy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filebeat-test
+  labels:
+    app: filebeat-test
+spec:
+  ports:
+  - port: 80
+    targetPort: 8090
+    protocol: TCP
+    name: http
+  selector:
+    run: filebeat-test
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+data:
+  filebeat.yml: |
+    filebeat.prospectors:
+    - input_type: log
+      paths:
+        - "/log/*"
+        - "/log/usermange/common/*"
+    output.elasticsearch:
+      hosts: ["172.23.5.255:9200"]
+    username: "elastic"
+    password: "changeme"
+    index: "filebeat-test"
+          
