@@ -8,12 +8,7 @@ MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
 # 定义环境变量
 ENV \
 # ibas目录
-    IBAS_HOME=/home/ \
-# ibas-data
-    IBAS_DATA=/home/ibas/ 
-
-# 初始化环境
-RUN mkdir -p "${IBAS_DATA}";
+    IBAS_HOME=/home/ibas  
 
 
 # 安装工具
@@ -21,9 +16,11 @@ RUN set -x \
     # 更新源
     && apk update \
     # 安装解压、网络请求
-    && apk add --no-cache curl wget unzip vim \
+    && apk add --no-cache unzip curl wget \
     # 删除源
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/* \
+    && mkdir -p "${IBAS_HOME}"
 
+RUN chmod 775 ${NGINX_HOME}
 # 设置工作目录
 WORKDIR "${IBAS_HOME}"
