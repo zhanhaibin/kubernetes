@@ -12,7 +12,7 @@ spec:
     spec:
       containers:  
       - name: c01-01-data
-        image: docker.avacloud.com.cn/avacloud/ibas-data:ibas-data
+        image: docker.avacloud.com.cn/avacloud/ibas-data:ibas-data-alpine
         resources:
          limits:
           memory: 64Mi
