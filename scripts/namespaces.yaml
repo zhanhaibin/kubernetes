@@ -11,3 +11,10 @@ metadata:
    name: deploy-web
    labels:
      name: deploy-web
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: ibas-platform
+   labels:
+     name: ibas-platform

@@ -1,0 +1,108 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ibas-platform-tomcat-deploy
+  namespace: ibas-platform
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ibas-platform-tomcat-deploy
+    spec:
+      containers:
+      - name: ibas-platform-tomcat
+        image: docker.avacloud.com.cn/colorcoding/tomcat:ibas-platform
+        ports:
+        - containerPort: 8080
+        resources:
+         limits:
+          memory: 512Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+        - mountPath: /usr/local/tomcat/ibas/conf/
+          name: ibasconf
+        - mountPath: /usr/local/tomcat/ibas/data/
+          name: ibasdata
+      volumes:
+       - name: time
+         hostPath:
+          path: /etc/localtime
+       - name: ibasconf
+         hostPath:
+          path: /srv/ibas/tomcat/ibas-platform/conf/
+       - name: ibasdata
+         hostPath:
+          path: /srv/ibas/tomcat/ibas-platform/data/
+---
+#----------------------------------------------#
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ibas-platform-web-deploy
+  namespace: ibas-platform
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ibas-platform-web-deploy
+    spec:
+      containers:
+       - name: ibas-platform-web
+         image: docker.avacloud.com.cn/colorcoding/nginx:ibas-platform
+         ports:
+          - containerPort: 80
+         resources:
+          limits:
+           memory: 64Mi
+         volumeMounts:
+            - mountPath: /etc/localtime
+              name: time
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx
+            - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
+              name: loader
+      volumes:
+       - name: time
+         hostPath:
+          path: /etc/localtime
+       - name: nginx
+         hostPath:
+          path: /srv/ibas/nginx/ibas-platform/nginx.conf
+       - name: loader
+         hostPath:
+          path: /srv/ibas/nginx/loader.js
+---
+#----------------------------------------------#
+apiVersion: v1
+kind: Service
+metadata:
+ name: ibas-platform-service
+ namespace: ibas-platform
+ labels:
+   name: ibas-platform-service
+spec:
+ ports:
+ - port: 8080
+   targetPort: 8080
+ selector:
+  app: ibas-platform-tomcat-deploy
+---
+#------------------------------------------------#
+apiVersion: v1
+kind: Service
+metadata:
+ name: ibas-platform-web
+ namespace: ibas-platform
+ labels:
+   name: ibas-platform-web
+spec:
+ type: NodePort
+ ports:
+ - port: 80
+   nodePort: 39999
+ selector:
+  app: ibas-platform-web-deploy
+          
