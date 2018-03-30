@@ -56,21 +56,6 @@ spec:
          hostPath:
           path: /srv/ibas/nginx/loader.js
 ---
-#----------------------------------------------#
-apiVersion: v1
-kind: Service
-metadata:
- name: ibas-platform-service
- namespace: ibas-platform
- labels:
-   name: ibas-platform-service
-spec:
- ports:
- - port: 8080
-   targetPort: 8080
- selector:
-  app: ibas-platform-tomcat-deploy
----
 #------------------------------------------------#
 apiVersion: v1
 kind: Service
