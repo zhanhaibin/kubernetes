@@ -25,6 +25,20 @@ spec:
           name: ibasconf
         - mountPath: /usr/local/tomcat/ibas/data/
           name: ibasdata
+      - name: ibas-platform-web
+         image: docker.avacloud.com.cn/colorcoding/nginx:ibas-platform
+         ports:
+          - containerPort: 80
+         resources:
+          limits:
+           memory: 64Mi
+         volumeMounts:
+          - mountPath: /etc/localtime
+            name: time
+          - mountPath: /etc/nginx/nginx.conf
+            name: nginx
+          - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
+            name: loader
       volumes:
        - name: time
          hostPath:
@@ -35,39 +49,6 @@ spec:
        - name: ibasdata
          hostPath:
           path: /srv/ibas/tomcat/ibas-platform/data/
----
-#----------------------------------------------#
-apiVersion: apps/v1beta1
-kind: Deployment
-metadata:
-  name: ibas-platform-web-deploy
-  namespace: ibas-platform
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: ibas-platform-web-deploy
-    spec:
-      containers:
-       - name: ibas-platform-web
-         image: docker.avacloud.com.cn/colorcoding/nginx:ibas-platform
-         ports:
-          - containerPort: 80
-         resources:
-          limits:
-           memory: 64Mi
-         volumeMounts:
-            - mountPath: /etc/localtime
-              name: time
-            - mountPath: /etc/nginx/nginx.conf
-              name: nginx
-            - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
-              name: loader
-      volumes:
-       - name: time
-         hostPath:
-          path: /etc/localtime
        - name: nginx
          hostPath:
           path: /srv/ibas/nginx/ibas-platform/nginx.conf
