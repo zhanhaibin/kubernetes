@@ -1,14 +1,14 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: ibas-platform-tomcat-deploy
+  name: ibas-platform-deploy
   namespace: ibas-platform
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: ibas-platform-tomcat-deploy
+        app: ibas-platform-deploy
     spec:
       containers:
       - name: ibas-platform-tomcat
@@ -70,5 +70,5 @@ spec:
  - port: 80
    nodePort: 32000
  selector:
-  app: ibas-platform-web-deploy
+  app: ibas-platform-deploy
           
