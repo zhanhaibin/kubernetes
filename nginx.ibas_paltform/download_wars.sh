@@ -31,7 +31,7 @@ do
         artifact=org/colorcoding/apps/$name
         path=$server/$repo/$artifact
 
-        version=`curl -s "$path/maven-metadata.xml" | grep release | sed "s/.*<release>\([^<]*\)<\/release>.*/\1/"`
+        version=`curl -s "$path/maven-metadata.xml" | grep -w release | sed "s/.*<release>\([^<]*\)<\/release>.*/\1/"`
 
         war=$name-$version.war
         echo $war >> "${IBAS_PACKAGE}/ibas.deploy.order.txt"
