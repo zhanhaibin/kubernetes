@@ -3,7 +3,7 @@
 FROM alpine:latest
 
 # 作者
-MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
+LABEL maintainer zhanhaibin
 
 # 安装工具
 RUN set -x \
@@ -19,6 +19,8 @@ ENV IBAS_HOME=/usr/share/ibas
 # 创建数据文件夹
 RUN set -x \
     && mkdir -p ${IBAS_HOME}
+
+RUN chmod 775 ${IBAS_HOME}
 
 # 设置工作目录
 WORKDIR ${IBAS_HOME}
