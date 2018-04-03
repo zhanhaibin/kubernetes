@@ -18,6 +18,9 @@ spec:
         resources:
          limits:
           memory: 512Mi
+        env:
+        - name: JAVA_OPTS
+          value: "-Xmx512m"
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
