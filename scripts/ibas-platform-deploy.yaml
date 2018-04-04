@@ -18,6 +18,7 @@ spec:
         resources:
          limits:
           memory: 512Mi
+        command: ["./initialize_apps.sh"]
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
