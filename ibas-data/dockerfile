@@ -3,14 +3,14 @@
 FROM alpine:latest
 
 # 作者
-LABEL maintainer zhanhaibin
+MAINTAINER  zhanhaibin
 
 # 安装工具
 RUN set -x \
     # 更新源
     && apk update \
     # 安装解压、网络请求
-    && apk add --no-cache unzip curl wget vim \
+    && apk add --no-cache bash zip curl wget vim \
     # 删除源
     && rm -rf /var/cache/apk/*
 
@@ -19,8 +19,9 @@ ENV IBAS_HOME=/usr/share/ibas
 # 创建数据文件夹
 RUN set -x \
     && mkdir -p ${IBAS_HOME}
-
-RUN chmod 775 ${IBAS_HOME}
+    
+COPY entrypoint.sh ${IBAS_HOME}/entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 
 # 设置工作目录
 WORKDIR ${IBAS_HOME}
