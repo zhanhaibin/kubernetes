@@ -49,7 +49,7 @@ spec:
           path: /etc/localtime
        - name: data
          hostPath:
-          path: /srv/ibas/tomcat/ibas-platform/ibas/
+          path: /srv/ibas/ibas-platform/ibas/
 ---
 #------------------------------------------------#
 apiVersion: v1
