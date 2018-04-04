@@ -21,7 +21,6 @@ spec:
         env:
         - name: JAVA_OPTS
           value: "-Xmx512m"
-        command: ["./initialize_apps.sh"]
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
