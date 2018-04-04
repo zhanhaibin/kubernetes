@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -24,10 +25,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
-        - mountPath: /usr/local/tomcat/ibas/conf/
-          name: ibasconf
-        - mountPath: /usr/local/tomcat/ibas/data/
-          name: ibasdata
+        - mountPath: /usr/local/tomcat/ibas/
+          name: ibas
       - name: c01-01-web
         image: docker.avacloud.com.cn/colorcoding/nginx:c01-01
         ports:
@@ -38,12 +37,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
-        - mountPath: /etc/nginx/nginx.conf
-          name: nginx
-        - mountPath: /usr/share/nginx/webapps/root/openui5/loader.js
-          name: loader
       - name: c01-01-data
-        image: docker.avacloud.com.cn/colorcoding/ibasdata:ibas-alpine
+        image: docker.avacloud.com.cn/colorcoding/data:ibas-alpine
         resources:
          limits:
           memory: 64Mi
@@ -51,23 +46,14 @@ spec:
         - mountPath: /etc/localtime
           name: time
         - mountPath: /usr/share/ibas/
-          name: ibasdata
+          name: ibas
       volumes:
        - name: time
          hostPath:
           path: /etc/localtime
-       - name: ibasconf
+       - name: ibas
          hostPath:
-          path: /srv/ibas/tomcat/c01-01/conf/
-       - name: ibasdata
-         hostPath:
-          path: /srv/ibas/tomcat/c01-01/data/
-       - name: nginx
-         hostPath:
-          path: /srv/ibas/nginx/c01-01/nginx.conf
-       - name: loader
-         hostPath:
-          path: /srv/ibas/nginx/loader.js
+          path: /srv/ibas/tomcat/c01-01/ibas/
 ---
 #------------------------------------------------#
 apiVersion: v1
