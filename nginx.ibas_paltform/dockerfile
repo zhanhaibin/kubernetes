@@ -19,7 +19,8 @@ ENV \
 COPY "download_wars.sh/" \
      "compile_order.txt" \
      "${NGINX_HOME}/"
-
+     
+COPY "nginx.conf" "/etc/nginx/nginx.conf"
 # 部署ibas程序
 RUN set -x \
 # 初始化环境
