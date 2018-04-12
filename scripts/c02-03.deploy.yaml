@@ -20,7 +20,7 @@ spec:
           memory: 256Mi
         env:
         - name: JAVA_OPTS
-          value: "-Xmx512m"
+          value: "-Xmx256m"
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
