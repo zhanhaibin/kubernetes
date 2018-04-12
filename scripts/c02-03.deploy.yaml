@@ -1,18 +1,18 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: c02-02-deploy
+  name: c02-03-deploy
   namespace: deploy
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: c02-02-deploy
+        app: c02-03-deploy
     spec:
       containers:
-      - name: c02-02-tomcat
-        image: docker.avacloud.com.cn/colorcoding/tomcat:c01-01
+      - name: c02-03-tomcat
+        image: docker.avacloud.com.cn/colorcoding/tomcat:c02-01
         ports:
         - containerPort: 8080
         resources:
@@ -26,8 +26,8 @@ spec:
           name: time
         - mountPath: /usr/local/tomcat/ibas/
           name: ibas
-      - name: c02-02-web
-        image: docker.avacloud.com.cn/colorcoding/nginx:c01-01
+      - name: c02-03-web
+        image: docker.avacloud.com.cn/colorcoding/nginx:c02-01
         ports:
         - containerPort: 80
         resources:
@@ -36,7 +36,7 @@ spec:
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
-      - name: c02-02-data
+      - name: c02-03-data
         image: docker.avacloud.com.cn/colorcoding/data:ibas-alpine
         resources:
          limits:
@@ -52,20 +52,20 @@ spec:
           path: /etc/localtime
        - name: ibas
          hostPath:
-          path: /srv/ibas/customers/c02-02/ibas/
+          path: /srv/ibas/customers/c02-03/ibas/
 ---
 #------------------------------------------------#
 apiVersion: v1
 kind: Service
 metadata:
- name: c02-02-web
+ name: c02-03-web
  namespace: deploy
  labels:
-   name: c02-02-web
+   name: c02-03-web
 spec:
  type: NodePort
  ports:
  - port: 80
-   nodePort: 30004
+   nodePort: 30005
  selector:
-  app: c02-02-deploy
+  app: c02-03-deploy
