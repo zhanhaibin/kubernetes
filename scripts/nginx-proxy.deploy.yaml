@@ -25,14 +25,19 @@ spec:
         - mountPath: /etc/localtime
           name: time
         - mountPath: /usr/share/nginx/html/apps/
-          name: nginx
+          name: apps
+        - mountPath: /etc/nginx/cert/
+          name: cert
       volumes:
        - name: time
          hostPath:
           path: /etc/localtime
-       - name: nginx
+       - name: apps
          hostPath:
           path: /srv/ibas/nginx-proxy/apps/
+       - name: cert
+         hostPath:
+          path: /srv/ibas/nginx-proxy/cert/
 ---
 #------------------------------------------------#
 apiVersion: v1
