@@ -28,13 +28,8 @@ RUN set -x \
     && mkdir -p "${NGINX_CONFIG}"/logs/ 
 
 # 拷贝配置文件
-COPY "/srv/ibas/nginx-proxy/apps" \
-    "index.html" \
-    "${NGINX_HOME}"/html/ 
+COPY "index.html" "${NGINX_HOME}/html/"
+COPY "nginx.conf" "${NGINX_CONFIG}"
 
-COPY "/srv/ibas/nginx-proxy/cert" \
-    "nginx.conf" \
-    "${NGINX_CONFIG}" 
-    
 # 设置工作目录
 WORKDIR "${NGINX_HOME}"
