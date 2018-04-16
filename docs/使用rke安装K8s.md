@@ -171,6 +171,11 @@ docker pull gcr.io/google_containers/cluster-proportional-autoscaler-amd64:1.0.0
 
 为了能在墙内使用，已经将几个镜像上传到个人的阿里云镜像仓库里。
 
+登录阿里元私有镜像仓库
+```
+sudo docker login --username=hb_zhan@163.com registry.cn-qingdao.aliyuncs.com
+```
+
 ```
 docker pull registry.cn-qingdao.aliyuncs.com/zhanhaibin/pause-amd64:3.0
 docker pull registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-kube-dns-amd64:1.14.5
