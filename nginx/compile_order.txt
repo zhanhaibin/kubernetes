@@ -21,3 +21,4 @@ ibas.shoppingclient
 ibas.membercenter
 ibas.oauthwechat
 ibas.wechatpay
+ibas.marketingpromotion
