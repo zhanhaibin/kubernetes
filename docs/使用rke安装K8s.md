@@ -192,6 +192,14 @@ docker tag registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-dnsmasq-nanny-amd
 docker tag registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-sidecar-amd64:1.14.5 gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.5
 docker tag registry.cn-qingdao.aliyuncs.com/zhanhaibin/cluster-proportional-autoscaler-amd64:1.0.0 gcr.io/google_containers/cluster-proportional-autoscaler-amd64:1.0.0
 docker tag registry.cn-qingdao.aliyuncs.com/zhanhaibin/kubernetes-dashboard-amd64:v1.8.2  k8s.gcr.io/kubernetes-dashboard-amd64:v1.8.2
+
+docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/pause-amd64:3.0
+docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-kube-dns-amd64:1.14.5
+docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-dnsmasq-nanny-amd64:1.14.5
+docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/k8s-dns-sidecar-amd64:1.14.5
+docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/cluster-proportional-autoscaler-amd64:1.0.0
+docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/kubernetes-dashboard-amd64:v1.8.2
+
 ```
 
 3、修改安装的配置信息
