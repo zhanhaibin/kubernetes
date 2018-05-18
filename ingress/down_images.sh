@@ -5,7 +5,7 @@ images=(
     defaultbackend:1.0)
 
 for imageName in ${images[@]} ; do
-    docker pull docker.io/chenliujin/$imageName
-    docker tag docker.io/chenliujin/$imageName gcr.io/google_containers/$imageName 
-    docker rmi docker.io/chenliujin/$imageName
+    docker pull registry.cn-qingdao.aliyuncs.com/zhanhaibin/$imageName
+    docker tag registry.cn-qingdao.aliyuncs.com/zhanhaibin/$imageName gcr.io/google_containers/$imageName
+    docker rmi registry.cn-qingdao.aliyuncs.com/zhanhaibin/$imageName
 done   
