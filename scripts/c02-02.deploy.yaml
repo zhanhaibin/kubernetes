@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: c02-02-tomcat
-        image: docker.avacloud.com.cn/colorcoding/tomcat:c01-01
+        image: docker.avacloud.com.cn/colorcoding/tomcat:c02-01
         ports:
         - containerPort: 8080
         resources:
@@ -30,7 +30,7 @@ spec:
         - mountPath: /usr/local/tomcat/ibas/
           name: ibas
       - name: c02-02-web
-        image: docker.avacloud.com.cn/colorcoding/nginx:c01-01
+        image: docker.avacloud.com.cn/colorcoding/nginx:c02-01
         ports:
         - containerPort: 80
         resources:
