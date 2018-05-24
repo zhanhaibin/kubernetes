@@ -35,6 +35,12 @@ spec:
       - image: sonatype/nexus3
         imagePullPolicy: Always
         name: nexus
+        resources:
+         limits:
+          memory: 1536Mi
+         requests: 
+          cpu: 150m
+          memory: 1536Mi
         ports:
         - containerPort: 8081
         - containerPort: 5000
