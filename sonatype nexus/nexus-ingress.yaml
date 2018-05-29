@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nexus-ingress
+  namespace: nexus
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 2048m
+    kubernetes.io/ingress.class: nginx
+    ingress.kubernetes.io/proxy-body-size: 100m
+    kubernetes.io/tls-acme: 'true'
+spec:
+  tls:
+    - secretName: nexus-tls
+      hosts:
+        - docker.avacloud.com.cn
+        - nexus.avacloud.com.cn
+  rules:
+    - host: nexus.avacloud.com.cn
+      http:
+        paths:
+          - path: /
+            backend:
+              servicePort: 80
+              serviceName: nexus-service
+    - host: docker.avacloud.com.cn
+      http:
+        paths:
+          - path: /
+            backend:
+              servicePort: 5000
+              serviceName: nexus-service
+status:
+  loadBalancer:
+    ingress:
+      - ip: 47.95.97.32
