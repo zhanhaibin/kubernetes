@@ -64,7 +64,7 @@ spec:
           path: /etc/localtime
        - name: ibas
          hostPath:
-          path: /srv/ibas/customers/c01-01/ibas/
+          path: /mnt/customers/c01-01/ibas/
 ---
 apiVersion: v1
 kind: Service

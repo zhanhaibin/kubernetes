@@ -17,13 +17,14 @@ spec:
         - containerPort: 8080
         resources:
          limits:
-          memory: 384Mi
-         requests: 
-          cpu: 100m
-          memory: 384Mi
+          cpu: 500m
+          memory: 768Mi
+         requests:
+          cpu: 200m
+          memory: 512Mi
         env:
         - name: JAVA_OPTS
-          value: "-Xmx384m"
+          value: "-Xmx512m"
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
@@ -35,7 +36,11 @@ spec:
         - containerPort: 80
         resources:
          limits:
+          cpu: 150m
           memory: 64Mi
+         requests:
+          cpu: 100m
+          memory: 32Mi
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
@@ -43,7 +48,11 @@ spec:
         image: docker.avacloud.com.cn/colorcoding/data:ibas-alpine
         resources:
          limits:
+          cpu: 150m
           memory: 64Mi
+         requests:
+          cpu: 100m
+          memory: 32Mi
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
@@ -55,9 +64,8 @@ spec:
           path: /etc/localtime
        - name: ibas
          hostPath:
-          path: /srv/ibas/customers/c02-01/ibas/
+          path: /mnt/customers/c02-01/ibas/
 ---
-#------------------------------------------------#
 apiVersion: v1
 kind: Service
 metadata:
@@ -66,9 +74,41 @@ metadata:
  labels:
    name: c02-01-web
 spec:
- type: NodePort
  ports:
  - port: 80
-   nodePort: 30003
+   targetPort: 80
  selector:
   app: c02-01-deploy
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: c02-01-ingress
+  namespace: deploy #服务在哪个空间内就写哪个空间
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3000'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '1200'
+    ingress.kubernetes.io/client-body-buffer-size: 200m
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '2400'
+    nginx.ingress.kubernetes.io/keepalive-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
+spec:
+  tls:
+    - hosts:
+        - app.avacloud.com.cn
+      secretName: app-tls
+  rules:
+  - host: app.avacloud.com.cn   #此service的访问域名
+    http:
+      paths:
+      - backend:
+          serviceName: c02-01-web
+          servicePort: 80
+        path: /c02/i01/
+status:
+  loadBalancer:
+    ingress:
+      - ip: 47.95.97.32 #负载均衡SLB IP
