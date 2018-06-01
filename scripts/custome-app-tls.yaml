@@ -1,0 +1,1 @@
+kubectl create secret tls app-tls --key  /mnt/ibas/certs/app.avacloud.com.cn/214392574680135.key --cert /mnt/ibas/certs/app.avacloud.com.cn/214392574680135.pem -n customer

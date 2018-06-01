@@ -11,3 +11,10 @@ metadata:
    name: ibas-platform
    labels:
      name: ibas-platform
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: customer
+   labels:
+     name: customer
