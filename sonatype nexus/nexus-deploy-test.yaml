@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nexus 
+  name: nexus
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -37,7 +37,7 @@ spec:
         resources:
          limits:
           memory: 1024Mi
-         requests: 
+         requests:
           cpu: 150m
           memory: 1024Mi
         ports:
@@ -61,13 +61,10 @@ spec:
   - port: 80
     targetPort: 8081
     protocol: TCP
-    nodePort: 8081
     name: http
   - port: 5000
     targetPort: 5000
-    nodePort: 5000
     protocol: TCP
-    name: docker 
-  type: NodePort
+    name: docker
   selector:
     app: nexus

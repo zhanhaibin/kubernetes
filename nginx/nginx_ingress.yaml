@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  namespace: deploy
+  annotations:
+    nginx.ingress.kubernetes.io/keepalive-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '1200'
+    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3000'
+    ingress.kubernetes.io/client-body-buffer-size: 200m
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '2400'
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+    - secretName: app-tls
+      hosts:
+        - app2.avacloud.com.cn
+  rules:
+    - host: app2.avacloud.com.cn
+      http:
+        paths:
+          - path: /
+            backend:
+              servicePort: 80
+              serviceName: nginx-svc
+status:
+  loadBalancer:
+    ingress:
+      - ip: 101.200.42.71

@@ -1,0 +1,59 @@
+# 基于nginx镜像的ibas镜像
+# OS：alpine
+FROM colorcoding/nginx:ibas-alpine
+
+# 作者
+MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
+
+# 定义环境变量
+ENV \
+# nginx目录
+    NGINX_HOME=/usr/share/nginx
+ENV \
+# ibas部署目录
+    IBAS_DEPLOY=${NGINX_HOME}/webapps \
+# ibas下载目录
+    IBAS_PACKAGE=${NGINX_HOME}/ibas_packages 
+    
+# 拷贝配置文件
+COPY "download_wars.sh/" \
+     "compile_order.txt" \
+     "${NGINX_HOME}/"
+
+COPY "nginx.conf" "/etc/nginx/nginx.conf"
+
+# 部署ibas程序
+RUN set -x \
+# 初始化环境
+    && mkdir -p "${IBAS_DEPLOY}" \
+    && mkdir -p "${IBAS_PACKAGE}" \
+# 下载最新的程序war包
+    && sh ${NGINX_HOME}/download_wars.sh ${NGINX_HOME}  ${IBAS_PACKAGE} \
+# 释放war包
+    && (while read file; \
+       do \
+         file=${file%%.war*}.war; \
+         echo 释放"${IBAS_PACKAGE}/${file}"; \
+# 修正war包的解压目录
+         folder=${file##*ibas.}; \
+         folder=${folder%%.service*}; \
+# 记录释放的目录到ibas.release.txt
+         if [ ! -e "${IBAS_DEPLOY}/ibas.release.txt" ]; then :>"${IBAS_DEPLOY}/ibas.release.txt"; fi; \
+         grep -q ${folder} "${IBAS_DEPLOY}/ibas.release.txt" || echo "${folder}" >>"${IBAS_DEPLOY}/ibas.release.txt"; \
+# 解压war包
+         unzip -o "${IBAS_PACKAGE}/${file}" -d "${IBAS_DEPLOY}/${folder}"; \
+# 删除没用的文件
+         if [ -e "${IBAS_DEPLOY}/${folder}/WEB-INF" ]; then \
+           rm -rf "${IBAS_DEPLOY}/${folder}/WEB-INF"; \
+         fi; \
+         if [ -e "${IBAS_DEPLOY}/${folder}/META-INF" ]; then \
+           rm -rf "${IBAS_DEPLOY}/${folder}/META-INF"; \
+         fi; \
+       done < "${IBAS_PACKAGE}/ibas.deploy.order.txt" | sed 's/\r//g';) \
+# 删除下载的包
+    && rm -rf "${IBAS_PACKAGE}"  \
+# 调整权限
+    && chmod -R 777 "${IBAS_DEPLOY}"
+
+# 设置工作目录
+WORKDIR "${NGINX_HOME}"

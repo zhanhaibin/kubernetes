@@ -1,0 +1,59 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: deploy
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: 'nginx:latest'
+          imagePullPolicy: Always
+          name: nginx
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 128Mi
+              cpu: 100m
+          ports:
+            - protocol: TCP
+              containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/
+              name: nginx-share
+            - mountPath: /etc/nginx/nginx.conf
+              name: conf
+      volumes:
+        - name: time
+          hostPath:
+            path: /etc/localtime
+            type: ''
+        - name: nginx-share
+          hostPath:
+            path: /srv/ibas/nginx-proxy/
+            type: ''
+        - name: conf
+          hostPath:
+            path: /srv/ibas/nginx-proxy/nginx/nginx.conf
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: deploy
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
