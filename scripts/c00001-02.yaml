@@ -18,13 +18,13 @@ spec:
         resources:
          limits:
           cpu: 350m
-          memory: 768Mi
+          memory: 896Mi
          requests: 
-          cpu: 150m
-          memory: 512Mi
+          cpu: 200m
+          memory: 768Mi
         env:
         - name: JAVA_OPTS
-          value: "-Xmx512m"
+          value: "-Xmx768m"
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
