@@ -15,7 +15,7 @@ WORK_FOLDER=$1
 #war包下载地址
 IBAS_PACKAGE=$2
 #nexus3 地址
-server=http://192.168.2.10:8081/repository
+server=http://nexus.avacloud.com.cnc/repository
 repo=maven-releases
 
 echo --工作的目录：${WORK_FOLDER}
