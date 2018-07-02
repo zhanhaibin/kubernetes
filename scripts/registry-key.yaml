@@ -1,0 +1,5 @@
+ kubectl -n customer create secret docker-registry registry-key \
+ --docker-server=docker.avacloud.com.cn \
+ --docker-username=admin \
+ --docker-password=<your_password> \
+ --docker-email=leno.zhan@avatech.com.cn
