@@ -6,13 +6,11 @@ ibas.documents
 ibas.approvalprocess
 ibas.feedback
 ibas.reportanalysis
-ibas.businessobjectsenterprise
 ibas.materials
 ibas.businesspartner
 ibas.purchase
 ibas.sales
 ibas.receiptpayment
-ibas.organizedposts
 ibas.barcode
 ibas.commoditycenter
 ibas.channelmanagement
