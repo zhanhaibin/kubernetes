@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: nexus-pv-nas
+  labels:
+    alicloud-pvname: nexus-pv-nas
 spec:
   capacity:
     storage: 50Gi
@@ -12,5 +14,5 @@ spec:
     driver: "alicloud/nas"
     options:
       server: "168fb49513-fkq54.cn-beijing.nas.aliyuncs.com"
-      path: "/nexus-pv"
+      path: "/nexus"
       vers: "4.0"
