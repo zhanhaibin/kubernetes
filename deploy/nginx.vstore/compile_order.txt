@@ -19,3 +19,4 @@ ibas.membercenter
 ibas.wechatpay
 ibas.marketingpromotion
 ibas.thirdpartyapp
+ibas.boan

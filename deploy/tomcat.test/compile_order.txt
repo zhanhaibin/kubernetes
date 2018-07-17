@@ -21,3 +21,4 @@ ibas.oauthwechat
 ibas.wechatpay
 ibas.marketingpromotion
 ibas.thirdpartyapp
+ibas.boan
