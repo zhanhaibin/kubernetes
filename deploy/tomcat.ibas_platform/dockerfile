@@ -22,8 +22,6 @@ EXPOSE 8080 8971
 #RUN mkdir -p ${IBAS_PACKAGE};
 
 # 拷贝应用包文件
-#COPY ./ibas_packages/ ${IBAS_PACKAGE}/
-COPY compile_order.txt ${CATALINA_HOME}
 COPY download_wars.sh ${CATALINA_HOME}
 COPY deploy_documents.sh ${CATALINA_HOME}
 

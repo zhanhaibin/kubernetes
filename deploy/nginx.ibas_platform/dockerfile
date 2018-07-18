@@ -16,10 +16,7 @@ ENV \
     IBAS_PACKAGE=${NGINX_HOME}/ibas_packages 
     
 # 拷贝配置文件
-COPY "download_wars.sh/" \
-     "compile_order.txt" \
-     "${NGINX_HOME}/"
-     
+COPY "download_wars.sh/" "${NGINX_HOME}/"
 COPY "nginx.conf" "/etc/nginx/nginx.conf"
 # 部署ibas程序
 RUN set -x \

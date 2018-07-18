@@ -17,7 +17,7 @@ NAME_TAG=${NAME}:${TAG}
 
 echo 开始构建镜像${NAME_TAG}
 # 调用docker build
-docker build --force-rm --no-cache -f ./dockerfile -t ${RegistoryUrl}/${NAME_TAG} ./
+sudo docker build --force-rm --no-cache -f ./dockerfile -t ${RegistoryUrl}/${NAME_TAG} ./
 
 if [ "$?" == "0" ]; then
   echo 镜像${NAME_TAG}构建完成
@@ -26,13 +26,13 @@ else
 fi;
 
 echo 登录私有镜像仓库
-docker login -u admin -p AVAtech2018 ${RegistoryUrl}
+sudo docker login -u admin -p AVAtech2018 ${RegistoryUrl}
 echo 上传镜像至私有仓库
-docker push ${RegistoryUrl}/${NAME_TAG}
+sudo docker push ${RegistoryUrl}/${NAME_TAG}
 echo 删除本地镜像
 #docker rmi ${RegistoryUrl}/${NAME_TAG}
 echo 容器镜像上传完成
-docker logout ${RegistoryUrl}
+sudo docker logout ${RegistoryUrl}
 
 
 
