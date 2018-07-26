@@ -29,7 +29,7 @@ spec:
         - mountPath: /etc/localtime
           name: time
         - mountPath: /usr/local/tomcat/ibas/
-          name: data
+          name: ibas
       - name: ibas-platform-web
         image: docker.avacloud.com.cn/colorcoding/nginx:ibas-platform
         ports:
@@ -57,12 +57,12 @@ spec:
         - mountPath: /etc/localtime
           name: time
         - mountPath: /usr/share/ibas/
-          name: data
+          name: ibas
       volumes:
        - name: time
          hostPath:
           path: /etc/localtime
-       - name: data
+       - name: ibas
          hostPath:
           path: /mnt/customers/ibas-platform/ibas/
       nodeSelector:
