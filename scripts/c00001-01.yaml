@@ -25,6 +25,8 @@ spec:
         env:
         - name: JAVA_OPTS
           value: "-Xmx512m"
+        command: ["/bin/sh"]
+        args: ["/usr/local/tomcat/initialize_apps.sh"]
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
