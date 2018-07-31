@@ -102,16 +102,15 @@ metadata:
 spec:
   tls:
     - hosts:
-        - app.avacloud.com.cn
-      secretName: app-tls
+        - console.avacloud.com.cn
+      secretName: console-tls
   rules:
-  - host: app.avacloud.com.cn   #此service的访问域名
+  - host: console.avacloud.com.cn   #此service的访问域名
     http:
       paths:
       - backend:
           serviceName: ibas-platform-svc 
           servicePort: 80
-        path: /platform/
 status:
   loadBalancer:
     ingress:

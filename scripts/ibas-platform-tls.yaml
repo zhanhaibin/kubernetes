@@ -1,0 +1,1 @@
+kubectl create secret tls app-tls --key  /mnt/ibas/certs/console.avacloud.com.cn/214872720110135.key --cert /mnt/ibas/certs/console.avacloud.com.cn/214872720110135.pem -n deploy

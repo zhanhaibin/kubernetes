@@ -8,7 +8,7 @@
 MYSQL=`which mysql`
 EXPECTED_ARGS=3
 
-# 使用Grant给用户赋予权限，没有此用户自动创建user
+# 使用Grant给用户赋予权限，没有此用户自动创建user 
 Q1="CREATE DATABASE \`$1\` CHARACTER SET utf8 COLLATE utf8_general_ci;"
 # 创建数据库 并设置默认数据库编码集
 Q2="GRANT ALL ON \`$1\`.* TO '$2'@'%' IDENTIFIED BY '$3';"
