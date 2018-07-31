@@ -13,6 +13,7 @@ spec:
       containers:
       - name: ibas-platform-tomcat
         image: docker.avacloud.com.cn/colorcoding/tomcat:ibas-platform
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         resources:
@@ -34,6 +35,7 @@ spec:
           name: ibas
       - name: ibas-platform-web
         image: docker.avacloud.com.cn/colorcoding/nginx:ibas-platform
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
         resources:
@@ -67,6 +69,8 @@ spec:
        - name: ibas
          hostPath:
           path: /mnt/customers/ibas-platform/ibas/
+      imagePullSecrets:
+      - name: registry-key
       nodeSelector:
         group: platform
 ---
