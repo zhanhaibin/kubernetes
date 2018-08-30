@@ -22,9 +22,10 @@ EXPOSE 8080 8971
 #RUN mkdir -p ${IBAS_PACKAGE};
 
 # 拷贝应用包文件
-COPY download_wars.sh ${CATALINA_HOME}
-COPY deploy_documents.sh ${CATALINA_HOME}
-
+COPY "download_wars.sh" \
+    "deploy_documents.sh" \
+    "initialize_apps_root.sh" ${CATALINA_HOME}
+    
 # 定义时区
 
 #定义环境变量
