@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MYSQL=`which mysql`
-EXPECTED_ARGS=5
+EXPECTED_ARGS=6
 # 创建用户和密码
 # $4 用户
 # $5 密码
