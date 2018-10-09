@@ -41,6 +41,7 @@ spec:
 ---
 apiVersion: v1
 kind: Service
+namespace: default
 metadata:
   name: wordpress
   labels:
