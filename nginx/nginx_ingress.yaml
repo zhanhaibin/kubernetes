@@ -1,32 +1,65 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: app
-  namespace: deploy
   annotations:
-    nginx.ingress.kubernetes.io/keepalive-timeout: '300'
-    nginx.ingress.kubernetes.io/proxy-body-size: 200m
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: '1200'
-    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '3000'
     ingress.kubernetes.io/client-body-buffer-size: 200m
+    ingress.kubernetes.io/proxy-body-size: 500m
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/client_max_body_size: 200m
+    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
+    nginx.ingress.kubernetes.io/keepalive-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 500m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '1200'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3000'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '2400'
     nginx.ingress.kubernetes.io/rewrite-target: /
+  creationTimestamp: '2018-05-28T12:06:30Z'
+  generation: 10
+  name: app
+  namespace: deploy
+  resourceVersion: '2969136'
+  selfLink: /apis/extensions/v1beta1/namespaces/deploy/ingresses/app
+  uid: 8e8687ab-626f-11e8-94f9-00163e10b5d1
 spec:
-  tls:
-    - secretName: app-tls
-      hosts:
-        - app2.avacloud.com.cn
   rules:
-    - host: app2.avacloud.com.cn
+    - host: app.avacloud.com.cn
       http:
         paths:
-          - path: /
-            backend:
-              servicePort: 80
+          - backend:
               serviceName: nginx-svc
+              servicePort: 80
+            path: /
+  tls:
+    - hosts:
+        - app.avacloud.com.cn
+      secretName: app-tls
 status:
   loadBalancer:
     ingress:
-      - ip: 101.200.42.71
+      - ip: 47.95.97.32
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  creationTimestamp: '2018-08-06T09:14:00Z'
+  generation: 1
+  name: wechat
+  namespace: deploy
+  resourceVersion: '13271253'
+  selfLink: /apis/extensions/v1beta1/namespaces/deploy/ingresses/wechat
+  uid: 0e277c6d-9959-11e8-94f9-00163e10b5d1
+spec:
+  rules:
+    - host: wechat.avacloud.com.cn
+      http:
+        paths:
+          - backend:
+              serviceName: nginx-svc
+              servicePort: 80
+            path: /
+status:
+  loadBalancer:
+    ingress:
+      - ip: 47.95.97.32
