@@ -1,0 +1,1 @@
+kubectl create secret tls ui5-tls --key  /mnt/ibas/nginx-proxy/cert/openui5.avacloud.com.cn/1566590_openui5.avacloud.com.cn.key --cert /mnt/ibas/nginx-proxy/cert/openui5.avacloud.com.cn/1566590_openui5.avacloud.com.cn.pem -n deploy
