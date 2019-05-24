@@ -8,9 +8,9 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-   name: ibas-platform
+   name: console
    labels:
-     name: ibas-platform
+     name: console
 ---
 apiVersion: v1
 kind: Namespace
