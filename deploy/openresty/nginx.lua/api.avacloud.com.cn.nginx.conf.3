@@ -1,0 +1,54 @@
+# j
+upstream backend {
+  server 127.0.0.1;
+}
+server {
+        listen       80;
+        server_name  api.avacloud.com.cn; 
+        
+        location ~ /lua/(.+) {
+           default_type text/html;
+           resolver 223.5.5.5 223.6.6.6;  # 这里位设置阿里的DNS，不设置DNS无法解析http请求的域名
+           content_by_lua_file lua/$1.lua;
+        }
+        
+        location / {
+          set $upstream api.avacloud.com.cn;
+          set $app_uri "";
+          resolver 172.20.0.0 172.21.0.0 valid=10s ipv6=off;
+          access_by_lua_block {
+            local redis = require "redis"
+            local split = require "splitstr"
+            local request_uri = ngx.var.request_uri
+            local http_array = split.lua_string_split(request_uri,"/")
+            local size = table.getn(http_array)
+            local account = http_array[2]
+            local accountcode = http_array[3]
+            local lenuri = string.len("/"..account.."/"..accountcode.."/")
+            local suburi = string.sub(request_uri,lenuri)
+            ngx.var.app_uri = suburi
+            local red = redis:new()
+            local res,err = red:get("/"..account.."/"..accountcode.."/")
+            
+            if not res then
+              ngx.say("failed to get svc:",err)
+            end
+            ngx.var.upstream = res
+          }
+          rewrite ^/2ir2vuf1/p05/(.*) /$1 break;
+          proxy_pass http://$upstream/; 
+          proxy_redirect off;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }        
+        
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+  }

@@ -1,0 +1,11 @@
+FROM openresty/openresty:alpine
+RUN apk add --update \
+    && apk add redis
+ADD entrypoint.sh /entrypoint.sh
+COPY redis.conf /redis.conf
+#COPY nginx.conf usr/local/openresty/nginx/conf/
+ENV PATH=$PATH:/usr/bin
+EXPOSE 6379
+EXPOSE 80
+ENTRYPOINT ["sh", "/entrypoint.sh"]
+

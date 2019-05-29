@@ -1,0 +1,27 @@
+upstream serverurl{
+        #服务发现规则： 服务名.命名空间.服务.集群.集群地址：端口
+        #server c01-01-service.deploy.svc.cluster.local:8080;
+        #同一个pod下，可以直接使用localhost，进行容器间访问
+        server c00002-05-svc.ibas-platform.svc.cluster.local:80;
+    }    
+server {
+        listen       80;
+        server_name  api.avacloud.com.cn;  
+       
+        location /2ir2vuf1/p05/ {
+           proxy_pass http://serverurl/;
+           proxy_redirect off;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+  }

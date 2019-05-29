@@ -1,0 +1,29 @@
+# 基于nginx镜像的ibas镜像
+# OS：alpine
+FROM colorcoding/openresty-dyups:latest
+
+# 作者
+MAINTAINER Niuren.Zhu "niuren.zhu@icloud.com"
+
+RUN apk add --update \
+    && apk add redis 
+
+# 定义环境变量
+ENV \
+# nginx目录
+    NGINX_HOME=/usr/local/openresty/nginx \ 
+    PATH=$PATH:/usr/bin
+# 拷贝配置文件
+ADD "entrypoint.sh" "${NGINX_HOME}/entrypoint.sh"
+COPY "redis.conf" "${NGINX_HOME}/redis.conf"
+COPY "cert/*" "/usr/local/openresty/nginx/conf/"
+# COPY "api.avacloud.com.cn.nginx.conf" "/etc/nginx/conf.d/"
+COPY "nginx.conf" "/usr/local/openresty/nginx/conf/"
+COPY "lualib/" "/usr/local/openresty/lualib/resty/"
+COPY "lua_script/*" "/usr/local/openresty/nginx/lua/"
+
+EXPOSE 6397 80
+    
+# 设置工作目录
+WORKDIR "${NGINX_HOME}"
+ENTRYPOINT  ["sh","entrypoint.sh"]
