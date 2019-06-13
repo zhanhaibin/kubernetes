@@ -11,7 +11,7 @@ init_worker_by_lua_block {
   local ibas_redis = require "ibas_redis"
   local upstream = require "ngx.upstream"
   local get_upstreams = upstream.get_upstreams
-  local restoken = "9e81e4bb0c8acfd05e9b9dfa42706562"
+  local restoken = "***********************"
   local delay = 10 -- in seconds
   local check 
   check = function(premature)
@@ -99,7 +99,7 @@ server {
             local namespace = http_array[2]                                            -- 命名空间 
             local accountencode = http_array[3]                                        -- 客户加密编码
             local accountport = string.sub(http_array[4],2)                            -- 客户账套编号，去掉首字符
-            local restoken = "9e81e4bb0c8acfd05e9b9dfa42706562"  -- ibas.get_platform_token("admin","1qaz@WSX")               -- 获取console平台token
+            local restoken = "*********************"  -- ibas.get_platform_token("*******","**********")               -- 获取console平台token
             local customercode = ibas.get_platform_customercode(restoken,accountencode)    -- 从console平台获取客户编码，未加密的
             local getredis = ibas_redis.get_ibas_redis(customercode.."-"..accountport) -- 读取缓存记录，条件：客户加密编码，客户账套编号
             
