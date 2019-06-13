@@ -4,7 +4,7 @@ local http = require "resty.http"
 local cjson = require "cjson"
 function _M.get_platform_runk8s(token,code,port,namespace)
   local httpc = http.new()
-  httpc:set_timeout(100)
+  -- httpc:set_timeout(100)
   local params = {}
   params['token'] = token
   params['customerCode'] = code
@@ -20,12 +20,53 @@ function _M.get_platform_runk8s(token,code,port,namespace)
     ssl_verify = false
   })
   if not res then
-    ngx.say("request error :",err)
+    ngx.log(ngx.ERR,"request error :",err)
   end
+  httpc:close()
   return res
 end
 
+function _M.get_platform_delK8s(token,code)
+  local httpc = http.new()
+  local params = {}
+  params['token'] = token
+  params['serverCode'] = 'SERVER'
+  params['accountCode'] = code
+  local res,err = httpc:request_uri("http://192.168.2.10:30090/operationmaintenance/services/rest/data/delK8sForOpen?"..ngx.encode_args(params),{
+    method = "GET",
+    headers = {
+      ["Accept"] = "*",
+      ["Accept-Encoding"] = "UTF-8",
+    },
+    ssl_verify = false
+  })
+  if not res then
+    ngx.log(ngx.ERR,"request error :",err)
+    return err
+  end
+  httpc:close()
+  return res.status
+end
 
+
+function _M.get_request_uri(uri)
+  local httpc = http.new()
+   -- httpc:set_timeout(200)
+   -- httpc:set_keepalive(200)
+   
+   local res,err = httpc:request_uri(uri,{
+   method = "GET",
+   headers = {
+      ["Accept"] = "text/html,application/xhtml+xml,application/xml",
+      ["Accept-Encoding"] = "UTF-8",
+   },
+   ssl_verify = false
+  })
+  httpc:close()
+  if not res then ngx.log(ngx.ERR,"res err:",err) return 0 end
+  if res == nil then ngx.log(ngx.ERR,"res is nil") return 0 end
+  return res.status
+end
 
 function _M.get_platform_token(user,password)
   local httpc = http.new()
@@ -42,7 +83,7 @@ function _M.get_platform_token(user,password)
    ssl_verify = false
   })
 
-  if not res then  return nil,nil,err  end
+  if not res then  return nil  end
   local token = ''
   local response = cjson.decode(res.body)
   for i, w in ipairs(response.ResultObjects) do
@@ -69,8 +110,7 @@ function _M.get_platform_customercode(token,enccode)
    ssl_verify = false
   })
 
-  if not res then  return nil,nil,err  end
-  local token = ''
+  if not res then  return nil  end
   local response = res.body
 
   httpc:close()

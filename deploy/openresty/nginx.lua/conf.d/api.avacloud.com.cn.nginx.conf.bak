@@ -33,21 +33,21 @@ init_worker_by_lua_block {
             ibas_redis.set_ibas_redis(u,"null")
           end
                
-          -- ok, err = hc.spawn_checker {
-          --  shm = "healthcheck",
-          --  upstream = u,
-          --  type = "http",
-          --  http_req = "GET /status HTTP/1.0\r\nHost: "..u.."\r\n\r\n",
-          --  interval = 2000,
-          --  timeout = 5000,
-          --  fall = 3,
-          --  rise = 2,
-          --  valid_statuses = {200, 302},
-          --  concurrency = 1,
-          -- }
-          -- if not ok then
-          --   ngx.log(ngx.ERR, "=======> failed to spawn health checker: ", err)
-          -- end
+          ok, err = hc.spawn_checker {
+            shm = "healthcheck",
+            upstream = u,
+            type = "http",
+            http_req = "GET /status HTTP/1.0\r\nHost: "..u.."\r\n\r\n",
+            interval = 2000,
+            timeout = 5000,
+            fall = 3,
+            rise = 2,
+            valid_statuses = {200, 302},
+            concurrency = 1,
+          }
+          if not ok then
+              ngx.log(ngx.ERR, "=======> failed to spawn health checker: ", err)
+          end
         end
       end
     end
@@ -104,17 +104,17 @@ server {
             local getredis = ibas_redis.get_ibas_redis(customercode.."-"..accountport) -- 读取缓存记录，条件：客户加密编码，客户账套编号
             
             ngx.var.upstream = customercode.."-"..accountport                               -- 后台服务upstream名称，客户编码+账号编号 如： c0000205
+            -- 后台服务upstream server地址 如：c00002-05.console.svc.cluster.local:80;
+            local backend_svc = "server "..customercode.."-"..accountport.."."..namespace..".svc.cluster.local:80;" 
             -- 定义访问请求地址url状态，用于测试地址是否有相应。 
             local request_uri_status = ibas.get_request_uri(ibas_host.."/"..http_array[3].."/"..http_array[4].."/")
             -- 返回200成功，说明接口服务已启动，否则，调用平台接口自动启动接口服务容器  
             if request_uri_status ~= 200 then 
               local resk8s = ibas.get_platform_runk8s(restoken,accountencode,accountport,namespace)
             end 
-
-            -- 后台服务upstream server地址 如：c00002-05.console.svc.cluster.local:80;
-            local backend_svc = "server "..customercode.."-"..accountport.."."..namespace..".svc.cluster.local:80;" 
+             
             if getredis == ngx.null or getredis == "null" then
-              ngx.log(ngx.ERR,"upstreams:",backend_svc)
+              ngx.log(ngx.ERR,"backend_svc:",backend_svc)
               local res,err = ngx.location.capture("/upstream/"..customercode.."-"..accountport,{ method = ngx.HTTP_POST,lua_need_request_body = on, body = backend_svc})
               if res.body == "success" then     
                 ibas_redis.set_ibas_redis(customercode.."-"..accountport,os.time())

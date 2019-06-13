@@ -15,9 +15,9 @@ function _M.get_ibas_redis(key)
  if key == nil or key == "" then
          key = "api"
  end
-
  local red = redis:new()
  local value = red:get(key)
+ 
  red:close()
  
  return value
