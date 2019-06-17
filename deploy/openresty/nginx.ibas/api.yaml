@@ -1,0 +1,86 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: api-deploy
+  namespace: console
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api-deploy
+    spec:
+      containers:
+      - name: api-web
+        image: docker.avacloud.com.cn/openresty-dyups/nginx:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+         limits:
+          memory: 64Mi
+         requests:
+          memory: 32Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: time
+        - mountPath: /etc/nginx/conf.d/
+          name: config
+      volumes:
+       - name: time
+         hostPath:
+          path: /etc/localtime
+       - name: config
+         hostPath:
+          path: /mnt/ibas/kubernetes/deploy/openresty/nginx.lua/conf.d/
+      imagePullSecrets:
+      - name: registry-key
+      nodeSelector:
+        group: console
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: api-svc
+ namespace: console
+ labels:
+   name: api-svc
+spec:
+ ports:
+ - port: 80
+   targetPort: 80
+ selector:
+  app: api-deploy
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+  namespace: console #服务在哪个空间内就写哪个空间
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3000'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '1200'
+    ingress.kubernetes.io/client-body-buffer-size: 200m
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '2400'
+    nginx.ingress.kubernetes.io/keepalive-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
+spec:
+  tls:
+    - hosts:
+        - api.avacloud.com.cn
+      secretName: api-tls
+  rules:
+  - host: api.avacloud.com.cn   #此service的访问域名
+    http:
+      paths:
+      - backend:
+          serviceName: api-svc  
+          servicePort: 80
+        path: /
+status:
+  loadBalancer:
+    ingress:
+      - ip: 47.95.97.32 #负载均衡SLB IP
