@@ -1,0 +1,77 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: byd-deployment
+  namespace: deploy
+  labels:
+    app: byd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: byd
+    spec:
+      containers:
+        - image: 'nginx:latest'
+          imagePullPolicy: Always
+          name: nginx
+          resources:
+            requests:
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          ports:
+            - protocol: TCP
+              containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: time
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginxconf
+      volumes:
+        - name: time
+          hostPath:
+            path: /etc/localtime
+            type: ''
+        - name: nginxconf
+          hostPath:
+            path: /mnt/ibas/kubernetes/deploy/ibas.byd/conf.d/nginx.conf
+            type: ''
+      nodeSelector:
+        group: console
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: byd-svc
+  namespace: deploy
+spec:
+  selector:
+    app: byd
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: byd
+  namespace: deploy
+spec:
+  rules:
+    - host: byd.avacloud.com.cn
+      http:
+        paths:
+          - backend:
+              serviceName: byd-svc
+              servicePort: 80
+            path: /
+status:
+  loadBalancer:
+    ingress:
+      - ip: 47.95.97.32
