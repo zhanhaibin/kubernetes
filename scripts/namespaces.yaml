@@ -18,3 +18,10 @@ metadata:
    name: customer
    labels:
      name: customer
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: api
+   labels:
+     name: api

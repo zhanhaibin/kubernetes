@@ -1,0 +1,1 @@
+kubectl create secret tls api-secret-tls --key /mnt/ibas/certs/api.avacloud.com.cn/2005833_api.avacloud.com.cn.key --cert /mnt/ibas/certs/api.avacloud.com.cn/2005833_api.avacloud.com.cn.pem -n api
