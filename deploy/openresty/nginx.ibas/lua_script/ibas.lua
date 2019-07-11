@@ -8,11 +8,11 @@ function _M.get_platform_runk8s(code,port,namespace)
   local httpc = http.new()
   -- httpc:set_timeout(100)
   local params = {}
-  params['customerCode'] = code
+  params['accountCode'] = code
   params['port'] = port
   params['serverCode'] = 'SERVER'
   params['namespace'] = namespace
-  local res,err = httpc:request_uri(request_console_url.."/customermanagement/services/rest/data/runK8sForOpen?"..ngx.encode_args(params),{
+  local res,err = httpc:request_uri(request_console_url.."/operationmaintenance/services/rest/data/runK8sForOpen?"..ngx.encode_args(params),{
     method = "GET",
     headers = {
       ["Accept"] = "*",
@@ -24,6 +24,7 @@ function _M.get_platform_runk8s(code,port,namespace)
     ngx.log(ngx.ERR,"request error :",err)
   end
   httpc:close()
+  -- ngx.sleep(100)
   return res
 end
 
@@ -32,6 +33,7 @@ function _M.get_platform_delK8s(code)
   local params = {}
   params['serverCode'] = 'SERVER'
   params['accountCode'] = code
+  params['namespace'] = 'api'
   local res,err = httpc:request_uri(request_console_url.."/operationmaintenance/services/rest/data/delK8sForOpen?"..ngx.encode_args(params),{
     method = "GET",
     headers = {
@@ -68,12 +70,13 @@ function _M.get_request_uri(uri)
   return res.status
 end
 
-function _M.get_platform_customercode(enccode)
+function _M.get_platform_podserviceurl(enccode,accountport)
   local httpc = http.new()
   local params = {}
   params['customerEncCode'] = enccode
+  params['accountPort'] = accountport
   httpc:set_timeout(120)
-  local res,err = httpc:request_uri(request_console_url.."/customermanagement/services/rest/data/searchCustomerForOpen?"..ngx.encode_args(params),{
+  local res,err = httpc:request_uri(request_console_url.."/operationmaintenance/services/rest/data/getK8sPodServiceUrl?"..ngx.encode_args(params),{
    method = "GET",
    headers = {
       ["Accept"] = "application/json",
@@ -88,6 +91,25 @@ function _M.get_platform_customercode(enccode)
   httpc:close()
 
 
+  return response
+end
+function _M.get_platform_customercode(enccode)
+  local httpc = http.new()
+  local params = {}
+  params['customerEncCode'] = enccode
+  
+  local res,err = httpc:request_uri(request_console_url.."/customermanagement/services/rest/data/searchCustomerForOpen?"..ngx.encode_args(params),{
+   method = "GET",
+   headers = {
+      ["Accept"] = "application/json",
+      ["Accept-Encoding"] = "UTF-8",
+   },
+   ssl_verify = false
+  })
+ 
+  if not res then  return err  end
+  local response = res.body
+  httpc:close()
   return response
 end
 

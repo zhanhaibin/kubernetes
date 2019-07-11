@@ -68,6 +68,21 @@ spec:
  selector:
   app: accountCode-deploy
 ---
+apiVersion: v1
+kind: Service
+metadata:
+ name: accountCode
+ namespace: k8sNamespace
+ labels:
+   name: accountCode
+spec:
+ type: NodePort
+ ports:
+ - port: 80
+   nodePort: 30090
+ selector:
+  app: accountCode-deploy
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -86,16 +101,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - app.avacloud.com.cn
-      secretName: app-tls
+        - console.avacloud.com.cn
+      secretName: console-tls
   rules:
-  - host: app.avacloud.com.cn   #此service的访问域名
+  - host: console.avacloud.com.cn   #此service的访问域名
     http:
       paths:
       - backend:
           serviceName: accountCode-svc  
           servicePort: 80
-        path: /accountStart/accountEnd/
+        path: /
 status:
   loadBalancer:
     ingress:

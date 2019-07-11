@@ -1,14 +1,14 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: accountCode-k8sNamespace-deploy
+  name: accountCode-deploy
   namespace: k8sNamespace
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: accountCode-k8sNamespace-deploy
+        app: accountCode-deploy
     spec:
       containers:
       - name: accountCode-tomcat
@@ -57,21 +57,21 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
- name: accountCode-k8sNamespace
+ name: accountCode
  namespace: k8sNamespace
  labels:
-   name: accountCode-k8sNamespace
+   name: accountCode
 spec:
  ports:
  - port: 80
    targetPort: 80
  selector:
-  app: accountCode-k8sNamespace-deploy
+  app: accountCode-deploy
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: accountCode-k8sNamespace-ingress
+  name: accountCode-ingress
   namespace: k8sNamespace #服务在哪个空间内就写哪个空间
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -86,16 +86,16 @@ metadata:
 spec:
   tls:
     - hosts:
-        - api.avacloud.com.cn
-      secretName: api-tls
+        - app.avacloud.com.cn
+      secretName: app-tls
   rules:
-  - host: api.avacloud.com.cn   #此service的访问域名
+  - host: app.avacloud.com.cn   #此service的访问域名
     http:
       paths:
       - backend:
-          serviceName: accountCode-k8sNamespace  
+          serviceName: accountCode  
           servicePort: 80
-        path: /accountCode-k8sNamespace/
+        path: /accountCode/
 status:
   loadBalancer:
     ingress:
