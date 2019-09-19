@@ -45,7 +45,7 @@ spec:
         - mountPath: /usr/share/nginx/webapps/root/shell/languages.json
           name: language
         - mountPath: /etc/nginx/nginx.conf
-          name: conf
+          name: nginxconf
       volumes:
        - name: time
          hostPath:
@@ -53,10 +53,10 @@ spec:
        - name: ibas
          hostPath:
           path: /mnt/customers/accountCode/ibas/
-       - name: ibas
+       - name: language
          hostPath:
           path: /mnt/customers/accountCode/ibas/conf/languages.json
-       - name: ibas
+       - name: nginxconf
          hostPath:
           path: /mnt/customers/accountCode/nginx/nginx.conf
       imagePullSecrets:
