@@ -37,10 +37,9 @@ http {
 
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for" "$request_time"' 
-                       ;
+                      '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log logs/access.log main;
+    access_log  logs/access.log  main;
     error_log logs/error.log notice;
     rewrite_log on;
     sendfile        on;
@@ -63,8 +62,9 @@ http {
       listen   80;
       server_name  app.avacloud.com.cn;
       ignore_invalid_headers off;
+
       location ~* /(cn|com)/my[0-9]+/ {
-        resolver 223.5.5.5 223.6.6.6;
+          resolver 223.5.5.5 223.6.6.6;
           if ($request_method = 'OPTIONS') {
             add_header Access-Control-Allow-Origin $http_origin;
             add_header Access-Control-Allow-Credentials true;
@@ -74,24 +74,45 @@ http {
             add_header Access-Control-Allow-Methods GET,POST,DELETE,PUT,OPTIONS;
             return 200;
           }
-          #set $cur_proxy $request_uri;
-          #set $cur_domain $request_uri;
-          #if ($request_uri ~* ^/(cn|com)/(.*)/(.*)$) {
-          #  set $cur_domain $1;
-          #  set $cur_proxy  $2;
-          #}
-          #if ($cur_domain = 'cn'){
-          #  set $cur_domain sapbyd.$1;
-          #}
-          #if ($cur_domain = 'com'){
-          #  set $cur_domain sapbydesign.$1;
-          #}
-          
-          rewrite ^/(cn|com)/my[0-9]+/(.*)$ /$2 break ;
-          #proxy_pass  https://$cur_proxy.$cur_domain/$2 ;
-          proxy_pass  https://my600265.sapbyd.cn/$2;
+          set $cur_proxy $request_uri;
+          set $cur_domain $request_uri;
+          if ($request_uri ~* ^/(cn|com)/(.*)/sap/(.*)$) {
+            set $cur_domain $1;
+            set $cur_proxy  $2;
+          }
+          if ($cur_domain = 'cn'){
+            set $cur_domain sapbyd.$1;
+          }
+          if ($cur_domain = 'com'){
+            set $cur_domain sapbydesign.$1;
+          }
+          rewrite ^/(cn|com)/my[0-9]+/(.*)$ /$2 break;
+          proxy_pass  https://$cur_proxy.$cur_domain;
           proxy_cookie_path /sap/ap/ui/login /;
+        }
+   }
+
+    server {
+      listen   80;
+      server_name  byd.avacloud.com.cn;
+      ignore_invalid_headers off;
+
+      location ~* /(cn|com)/my[0-9]+/ {
+          resolver 223.5.5.5 223.6.6.6;
+           if ($request_method = 'OPTIONS') {
+               add_header 'Access-Control-Allow-Origin' '*';
+               add_header 'Access-Control-Allow-Credentials' 'true';
+               add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+               add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+               add_header 'Access-Control-Max-Age' 1728000;
+               add_header 'Content-Type' 'text/plain; charset=utf-8';
+               add_header 'Content-Length' 0;
+               return 200;
+          }
+          #ngx.log(ngx.ERR,https://app.avacloud.com.cn/byd/$request_uri);
+          proxy_pass https://app.avacloud.com.cn/byd$request_uri;
 
       }
    }
+
 }
