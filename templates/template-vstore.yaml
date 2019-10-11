@@ -42,6 +42,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginxconf
       volumes:
        - name: time
          hostPath:
@@ -49,6 +51,9 @@ spec:
        - name: ibas
          hostPath:
           path: /mnt/customers/accountCode/ibas/
+       - name: nginxconf 
+         hostPath:
+          path: /mnt/ibas/nginx/nginx.conf
       imagePullSecrets:
       - name: registry-key
       nodeSelector:

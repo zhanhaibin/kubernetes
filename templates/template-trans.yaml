@@ -42,7 +42,7 @@ spec:
         volumeMounts:
         - mountPath: /etc/localtime
           name: time
-        - mountPath: /usr/share/nginx/webapps/root/shell/languages.json
+        - mountPath: /usr/share/nginx/webapps/root/shell/
           name: language
         - mountPath: /etc/nginx/nginx.conf
           name: nginxconf
@@ -55,10 +55,10 @@ spec:
           path: /mnt/customers/accountCode/ibas/
        - name: language
          hostPath:
-          path: /mnt/customers/accountCode/ibas/conf/languages.json
+          path: /mnt/customers/accountCode/ibas/languages/
        - name: nginxconf
          hostPath:
-          path: /mnt/customers/accountCode/nginx/nginx.conf
+          path: /mnt/ibas/nginx/nginx_trans.conf
       imagePullSecrets:
       - name: registry-key
       nodeSelector:
