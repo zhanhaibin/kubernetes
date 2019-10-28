@@ -28,11 +28,11 @@ RUN set -x \
 # 释放war包
     && (while read file; \
        do \
-         file=${file%%.war*}.war; \
+         file=${file%.war*}.war; \
          echo 释放"${IBAS_PACKAGE}/${file}"; \
 # 修正war包的解压目录
          folder=${file##*ibas.}; \
-         folder=${folder%%.service*}; \
+         folder=${folder%.service*}; \
 # 记录释放的目录到ibas.release.txt
          if [ ! -e "${IBAS_DEPLOY}/ibas.release.txt" ]; then :>"${IBAS_DEPLOY}/ibas.release.txt"; fi; \
          grep -q ${folder} "${IBAS_DEPLOY}/ibas.release.txt" || echo "${folder}" >>"${IBAS_DEPLOY}/ibas.release.txt"; \
