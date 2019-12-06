@@ -1,1 +1,1 @@
-kubectl create secret tls wechat-tls --key  /mnt/ibas/nginx-proxy/cert/wechat.avacloud.com.cn/1557823_wechat.avacloud.com.cn.key --cert /mnt/ibas/nginx-proxy/cert/wechat.avacloud.com.cn/1557823_wechat.avacloud.com.cn.pem -n deploy
+kubectl create secret tls nexus-tls --key /mnt/ibas/certs/3186164_docker.avacloud.com.cn_nginx/3186164_docker.avacloud.com.cn.key --cert /mnt/ibas/certs/3186164_docker.avacloud.com.cn_nginx/3186164_docker.avacloud.com.cn.pem -n nexus
