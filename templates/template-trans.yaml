@@ -55,7 +55,7 @@ spec:
           path: /mnt/customers/accountCode/ibas/
        - name: language
          hostPath:
-          path: /mnt/customers/accountCode/ibas/languages/languages.json
+          path: /mnt/customers/accountCode/ibas/i18n/languages.json
        - name: nginxconf
          hostPath:
           path: /mnt/ibas/nginx/nginx_trans.conf
