@@ -1,0 +1,48 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: wiki-deploy
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wiki-deploy
+    spec:
+      containers:
+      - name: wiki
+        image: squidfunk/mkdocs-material
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        resources:
+            requests:
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+        volumeMounts:
+        - mountPath: /docs
+          name: docs
+      volumes:
+       - name: docs
+         hostPath:
+          path: /mnt/ibas/wiki/docs/vstore-wiki
+      imagePullSecrets:
+      - name: registry-key
+      nodeSelector:
+        group: console
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: wiki-svc
+ namespace: default
+ labels:
+   name: wiki-svc
+spec:
+ ports:
+ - port: 80
+   targetPort: 8000
+ selector:
+  app: wiki-deploy
