@@ -21,13 +21,14 @@ spec:
               memory: 64Mi
             limits:
               memory: 128Mi
+        workingDir: /docs/vstore-wiki
         volumeMounts:
         - mountPath: /docs
           name: docs
       volumes:
        - name: docs
          hostPath:
-          path: /mnt/ibas/wiki/docs/vstore-wiki
+          path: /mnt/ibas/wiki/docs
       imagePullSecrets:
       - name: registry-key
       nodeSelector:
@@ -44,5 +45,20 @@ spec:
  ports:
  - port: 80
    targetPort: 8000
+ selector:
+  app: wiki-deploy
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: wiki
+ namespace: default
+ labels:
+   name: wiki
+spec:
+ type: NodePort
+ ports:
+ - port: 8000
+   nodePort: 30091
  selector:
   app: wiki-deploy
