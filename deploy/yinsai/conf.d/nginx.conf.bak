@@ -1,0 +1,82 @@
+# nginx.conf  --  docker-openresty
+#
+# This file is installed to:
+#   `/usr/local/openresty/nginx/conf/nginx.conf`
+# and is the file loaded by nginx at startup,
+# unless the user specifies otherwise.
+#
+# It tracks the upstream OpenResty's `nginx.conf`, but removes the `server`
+# section and adds this directive:
+#     `include /etc/nginx/conf.d/*.conf;`
+#
+# The `docker-openresty` file `nginx.vh.default.conf` is copied to
+# `/etc/nginx/conf.d/default.conf`.  It contains the `server section
+# of the upstream `nginx.conf`.
+#
+# See https://github.com/openresty/docker-openresty/blob/master/README.md#nginx-config-files
+#
+
+#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for" "$request_time"' 
+    #                   ;
+
+    #access_log logs/access.log main;
+    #error_log logs/error.log notice;
+    rewrite_log on;
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  120;
+    client_max_body_size 100M;
+    proxy_ignore_client_abort on;
+    fastcgi_send_timeout 600;
+    fastcgi_read_timeout 600;
+    proxy_connect_timeout  600;
+    proxy_send_timeout  600;
+    proxy_read_timeout  600;
+
+    gzip  on;
+
+    include /etc/nginx/conf.d/*.conf;   
+    server {
+      listen   80;
+      server_name  app.avacloud.com.cn;
+      ignore_invalid_headers off;
+      location /attendance {
+        resolver 223.5.5.5 223.6.6.6;
+       #   if ($request_method = 'OPTIONS') {
+       #     add_header Access-Control-Allow-Origin $http_origin;
+       #     add_header Access-Control-Allow-Credentials true;
+       #     add_header Access-Control-Allow-Headers $http_access_control_request_headers;
+       #     add_header Access-Control-Allow-Headers x-sap-request-xsrf,x-csrf-token,authorization,origin,x-requested-with,access-control-request-headers,content-type,access-control-request-method,accept;
+       #     add_header Access-Control-Expose-Headers x-sap-request-xsrf,x-csrf-token,authorization,origin,x-requested-with,access-control-request-headers,content-type,access-control-request-method,accept,sap-xsrf;
+       #     add_header Access-Control-Allow-Methods GET,POST,DELETE,PUT,OPTIONS;
+       #     return 200;
+       #   }
+
+      #    rewrite ^/(.*)$ /$1 break ;
+          proxy_pass  https://attendance.intech.gdinsight.com/?$args ;
+      }
+   }
+}

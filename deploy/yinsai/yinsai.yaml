@@ -1,0 +1,89 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: yinsai-deploy
+  namespace: api
+  labels:
+    app: yinsai-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: yinsai-deploy
+    spec:
+      containers:
+        - image: 'nginx:latest'
+          imagePullPolicy: Always
+          name: nginx
+          resources:
+            requests:
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          ports:
+            - protocol: TCP
+              containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: time
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginxconf
+      volumes:
+        - name: time
+          hostPath:
+            path: /etc/localtime
+            type: ''
+        - name: nginxconf
+          hostPath:
+            path: /mnt/ibas/kubernetes/deploy/yinsai/conf.d/nginx.conf
+            type: ''
+      nodeSelector:
+        group: console
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yinsai-svc
+  namespace: api
+spec:
+  selector:
+    app: yinsai-deploy
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: yinsai-ingress
+  namespace: api  #服务在哪个空间内就写哪个空间
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3000'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '1200'
+    ingress.kubernetes.io/client-body-buffer-size: 200m
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '2400'
+    nginx.ingress.kubernetes.io/keepalive-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 200m
+    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
+spec:
+  tls:
+    - hosts:
+        - app.avacloud.com.cn
+      secretName: app-tls
+  rules:
+  - host: app.avacloud.com.cn   #此service的访问域名
+    http:
+      paths:
+      - backend:
+          serviceName: yinsai-svc
+          servicePort: 80
+        path: /yinsai/
+status:
+  loadBalancer:
+    ingress:
+      - ip: 47.95.97.32 #负载均衡SLB IP
