@@ -45,7 +45,7 @@ spec:
             path: /mnt/ibas/openui5/nginx.conf
             type: ''
       nodeSelector:
-        group: ibas-platform
+        group: console
       restartPolicy: Always
 ---
 apiVersion: v1
